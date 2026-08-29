@@ -4,7 +4,7 @@
 
 - Project: Software Support Policy Applicability Ledger
 - Category: GenLayer Intelligent Contract with browser dApp
-- Exact commit: `298f4f004bdb8fd4b71db21f032683fc870d5008`
+- Exact source revision commit: `10685e30d95b816a88f84dfa0fd6db2a464e87b0`
 - Contract source: `contracts/support_policy_ledger.py`
 - Contract source SHA-256: `314824D86E3CFF276E885E930F619717449D76D6AA5B8D364F4F37C41C4E6E8B`
 - Network target: Studionet
@@ -48,4 +48,3 @@ The official Web Access page documents `response.status_code`, while the pinned 
 ## PRE_DEPLOY boundary
 
 No wallet signature, contract deployment, contract write, GitHub push, Vercel deployment, or live transaction has occurred. PRE_DEPLOY review is not yet requestable because the exact public Studio deployer address and role have not been selected and recorded. Once that human-owned checkpoint input is supplied, this exact package must be re-hashed if anything changes and sent to the anonymous co-review AI using the mandatory first-message template.
-
