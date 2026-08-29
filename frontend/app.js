@@ -115,12 +115,18 @@ function renderRecord(record) {
   elements.empty.classList.add("hidden"); elements.result.classList.remove("hidden"); elements.outcome.textContent = value.outcome || "DRAFT"; elements.caseState.textContent = value.state || "—";
   elements.readCaseId.textContent = value.case_id || state.lastCaseId || "—"; elements.readProduct.textContent = `${value.product_id || "—"} / ${value.version || "—"}`; elements.readScope.textContent = `${value.edition || "—"} / ${value.region || "—"}`; elements.readDate.textContent = value.observed_date || "—"; elements.readWindow.textContent = value.support_start && value.support_end ? `${value.support_start} → ${value.support_end}` : "—"; elements.readRetries.textContent = String(value.retry_count ?? 0); elements.digest.textContent = value.evidence_digest || "—"; elements.policyLink.href = /^https:\/\//i.test(policy) ? policy : "#";
 }
+function resetCaseContext() {
+  state.lastCaseId = "";
+  elements.empty.classList.remove("hidden");
+  elements.result.classList.add("hidden");
+  elements.freeze.disabled = true;
+  elements.assess.disabled = true;
+}
 function updateButtons() { const ready = configured() && Boolean(state.account); elements.connect.disabled = !configured(); elements.freeze.disabled = !ready || !state.lastCaseId; elements.assess.disabled = !ready || !state.lastCaseId; }
 
 elements.network.value = state.network; elements.address.value = state.contractAddress; elements.observedDate.value = new Date().toISOString().slice(0, 10);
-elements.network.addEventListener("change", () => { state.network = elements.network.value; state.provider = null; state.account = null; clients(); elements.connection.textContent = "Reconnect required"; elements.account.textContent = "Network changed; connect again."; elements.networkLabel.textContent = state.network; updateButtons(); });
-elements.address.addEventListener("input", () => { state.contractAddress = elements.address.value.trim(); updateButtons(); });
+elements.network.addEventListener("change", () => { state.network = elements.network.value; state.provider = null; state.account = null; resetCaseContext(); clients(); elements.connection.textContent = "Reconnect required"; elements.account.textContent = "Network changed; connect again."; elements.networkLabel.textContent = state.network; updateButtons(); });
+elements.address.addEventListener("input", () => { state.contractAddress = elements.address.value.trim(); resetCaseContext(); updateButtons(); });
 elements.providers.addEventListener("change", () => { state.provider = state.providerInfo.get(elements.providers.value)?.provider || null; });
 elements.connect.addEventListener("click", connectWallet); elements.register.addEventListener("submit", register); elements.freeze.addEventListener("click", freeze); elements.assess.addEventListener("click", assess); elements.refresh.addEventListener("click", () => readCase());
 clients(); discoverProviders(); updateButtons();
-
