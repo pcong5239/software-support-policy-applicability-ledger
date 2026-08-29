@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Auditable software support policy applicability ledger" />
+    <title>Support Policy Ledger</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="wordmark" href="./">Support Policy <span>Ledger</span></a>
+      <div class="network-pill"><span class="dot" aria-hidden="true"></span><span id="network-label">Not connected</span></div>
+    </header>
+
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">GENLAYER / EVIDENCE REGISTER</p>
+        <h1>Does this product remain supported?</h1>
+        <p class="lede">Freeze the exact product facts, assess them against the publisher policy, and read back a consensus-backed outcome with its evidence digest.</p>
+      </section>
+
+      <section class="setup card" aria-labelledby="setup-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">01 / CONNECT</p><h2 id="setup-title">Choose the network and wallet</h2></div>
+          <span id="connection-state" class="state-chip">Setup required</span>
+        </div>
+        <div class="form-grid setup-grid">
+          <label>Network<select id="network-select"><option value="studionet">Studionet</option><option value="testnetBradbury">Testnet Bradbury</option><option value="localnet">Localnet</option></select></label>
+          <label>Contract address<input id="contract-address" inputmode="text" placeholder="0x…" autocomplete="off" /></label>
+          <label>Wallet provider<select id="provider-select"><option value="">Discovering providers…</option></select></label>
+        </div>
+        <div class="action-row"><button id="connect-button" class="button primary">Connect wallet</button><span id="account-label" class="muted">No account selected.</span></div>
+      </section>
+
+      <section class="workspace">
+        <div class="card case-card">
+          <div class="section-heading"><div><p class="eyebrow">02 / REGISTER</p><h2>Freeze a case</h2></div><span class="step-number">A</span></div>
+          <p class="helper">Registration stores only the exact facts you enter. Freeze before any policy assessment.</p>
+          <form id="register-form" class="form-grid">
+            <label>Case ID<input id="case-id" required maxlength="256" placeholder="acme-2026-q2" /></label>
+            <label>Product ID<input id="product-id" required maxlength="256" placeholder="acme-suite" /></label>
+            <label>Version<input id="version" required maxlength="32" placeholder="1.2.3" /></label>
+            <label>Edition<input id="edition" required maxlength="256" placeholder="enterprise" /></label>
+            <label>Region<input id="region" required maxlength="256" placeholder="eu" /></label>
+            <label class="wide">Policy URL<input id="policy-url" required type="url" placeholder="https://vendor.example/support.json" /></label>
+            <div class="action-row wide"><button class="button primary" type="submit">Register case</button><button class="button secondary" id="freeze-button" type="button" disabled>Freeze case</button></div>
+          </form>
+        </div>
+
+        <div class="card assess-card">
+          <div class="section-heading"><div><p class="eyebrow">03 / ASSESS</p><h2>Ask for a decision</h2></div><span class="step-number">B</span></div>
+          <p class="helper">The contract fetches the policy as untrusted evidence, lets validators rederive the consequence, and stores the result.</p>
+          <div class="form-grid">
+            <label>Observed date<input id="observed-date" type="date" required /></label>
+            <div class="action-row align-end"><button class="button primary" id="assess-button" type="button" disabled>Assess frozen case</button></div>
+          </div>
+          <div class="progress-rail" aria-label="Assessment workflow"><span class="active">Registered</span><span>Frozen</span><span>Assessed</span><span>Read back</span></div>
+        </div>
+      </section>
+
+      <section class="card result-card" aria-live="polite">
+        <div class="section-heading"><div><p class="eyebrow">04 / READBACK</p><h2>Contract state</h2></div><button id="refresh-button" class="text-button" type="button">Refresh</button></div>
+        <div id="empty-result" class="empty-state">Register or search a case to inspect its authoritative state.</div>
+        <div id="result-content" class="result-content hidden">
+          <div class="decision"><span class="eyebrow">CURRENT OUTCOME</span><strong id="outcome">—</strong><span id="case-state" class="state-chip">—</span></div>
+          <dl class="facts"><div><dt>Case</dt><dd id="read-case-id">—</dd></div><div><dt>Product / version</dt><dd id="read-product">—</dd></div><div><dt>Edition / region</dt><dd id="read-scope">—</dd></div><div><dt>Observed date</dt><dd id="read-date">—</dd></div><div><dt>Support window</dt><dd id="read-window">—</dd></div><div><dt>Retries</dt><dd id="read-retries">—</dd></div></dl>
+          <div class="evidence"><span class="eyebrow">EVIDENCE DIGEST</span><code id="evidence-digest">—</code><a id="policy-link" href="#" target="_blank" rel="noreferrer noopener">Open policy URL ↗</a></div>
+        </div>
+      </section>
+
+      <section class="notice" id="notice" role="status"><span class="notice-mark">i</span><span id="notice-text">Enter a deployed contract address to begin.</span></section>
+    </main>
+
+    <footer class="footer"><span>Decision state is read from GenLayer.</span><a href="../STAGE-2.md">Protocol notes</a></footer>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
+
