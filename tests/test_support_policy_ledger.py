@@ -131,6 +131,32 @@ def test_unavailable_source_is_retryable(direct_vm, direct_deploy):
     assert contract.get_case("case-1").retry_count == 1
 
 
+def test_timeout_like_source_failure_is_unresolved_and_retryable(direct_vm, direct_deploy):
+    contract = deploy(direct_deploy)
+    register_and_freeze(contract, direct_vm)
+    mock_policy(direct_vm, "", status=504)
+    assert contract.assess("case-1", "2026-01-01") == "UNRESOLVED"
+
+    mock_policy(direct_vm, policy())
+    assert contract.retry_unresolved("case-1") == "SUPPORTED"
+
+
+def test_overlong_policy_body_fails_closed(direct_vm, direct_deploy):
+    contract = deploy(direct_deploy)
+    register_and_freeze(contract, direct_vm)
+    mock_policy(direct_vm, "x" * 32_769)
+    assert contract.assess("case-1", "2026-01-01") == "UNRESOLVED"
+
+
+def test_missing_required_policy_field_is_scope_unclear(direct_vm, direct_deploy):
+    contract = deploy(direct_deploy)
+    register_and_freeze(contract, direct_vm)
+    incomplete = json.loads(policy())
+    del incomplete["max_version"]
+    mock_policy(direct_vm, json.dumps(incomplete))
+    assert contract.assess("case-1", "2026-01-01") == "POLICY_SCOPE_UNCLEAR"
+
+
 def test_product_mismatch_is_unresolved(direct_vm, direct_deploy):
     contract = deploy(direct_deploy)
     register_and_freeze(contract, direct_vm)

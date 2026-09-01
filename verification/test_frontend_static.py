@@ -17,6 +17,8 @@ def test_frontend_has_explicit_wallet_and_finality_boundaries():
     assert 'MetaMask' in app and 'OKX Wallet' in app and 'Rabby' in app
     assert 'status: "FINALIZED"' in app
     assert 'FINISHED_WITH_RETURN' in app
+    assert 'executionResult !== "FINISHED_WITH_RETURN"' in app
+    assert 'receipt.txExecutionResultName &&' not in app
     assert 'register_case' in app
     assert 'freeze_case' in app
     assert 'assess' in app

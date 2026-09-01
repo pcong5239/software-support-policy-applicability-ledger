@@ -121,7 +121,8 @@ function bindProviderEvents(provider) {
 
 async function waitFinalized(hash) {
   const receipt = await state.readClient.waitForTransactionReceipt({ hash, status: "FINALIZED" });
-  if (receipt.txExecutionResultName && receipt.txExecutionResultName !== "FINISHED_WITH_RETURN") throw new Error(`Transaction finalized with ${receipt.txExecutionResultName}. State was not accepted.`);
+  const executionResult = receipt?.txExecutionResultName;
+  if (executionResult !== "FINISHED_WITH_RETURN") throw new Error(`Transaction finalized without successful contract execution (${executionResult ?? "missing execution result"}).`);
   return receipt;
 }
 async function write(functionName, args, button, pendingLabel) {
