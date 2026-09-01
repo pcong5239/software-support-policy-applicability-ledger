@@ -3,6 +3,21 @@
   "rpc": "https://studio.genlayer.com/api",
   "methods": ["eth_getTransactionByHash", "eth_getTransactionReceipt"],
   "contract": "0x97375A261D51ec8B90D4DE44eD5Ea4711a598355",
+  "latest_pd01_recheck_utc": "2026-09-01T03:22:02.9116649Z",
+  "latest_pd01_recheck": {
+    "eth_getTransactionByHash": {
+      "hash": "0xc0f0348850dc66de14e8ac958fd7c94ebb9db2a39ff715e0d590c21ea163121a",
+      "tx_id": "0xc0f0348850dc66de14e8ac958fd7c94ebb9db2a39ff715e0d590c21ea163121a",
+      "status": "FINALIZED",
+      "result_name": "MAJORITY_AGREE",
+      "execution_result": "SUCCESS"
+    },
+    "eth_getTransactionReceipt": {
+      "transactionHash": "0xc0f0348850dc66de14e8ac958fd7c94ebb9db2a39ff715e0d590c21ea163121a",
+      "status": "0x1",
+      "blockNumber": "0x0"
+    }
+  },
   "receipts": [
     {
       "case": "PD-01",

@@ -46,6 +46,8 @@ On 2026-09-01, each live write hash was queried directly at `https://studio.genl
 
 This direct RPC evidence resolves the prior claim that PD-01 was not found. No replacement transaction was created; the original PD-01 hash is authoritative and reproducible through both canonical RPC methods.
 
+Latest direct recheck: `2026-09-01T03:22:02.9116649Z` UTC. It returned the same PD-01 hash from both methods; the machine-readable details are in `verification/studionet-receipts.json`.
+
 ## Receipt observations
 
 - Live receipts showed the full consensus lifecycle `PENDING → PROPOSING → COMMITTING → REVEALING → ACCEPTED → FINALIZED`.
