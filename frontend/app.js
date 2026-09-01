@@ -1,8 +1,10 @@
 import { createClient } from "https://esm.sh/genlayer-js@1.1.8";
 import { localnet, studionet, testnetBradbury } from "https://esm.sh/genlayer-js@1.1.8/chains";
-import { DEFAULT_CONFIG, NETWORKS } from "./config.js";
+import { DEFAULT_CONFIG, EXPLORERS, NETWORKS } from "./config.js";
 
 const CHAINS = { localnet, studionet, testnetBradbury };
+const SUPPORTED_WALLETS = Object.freeze({ metamask: "MetaMask", okx: "OKX Wallet", rabby: "Rabby" });
+const boundProviders = new WeakSet();
 const state = {
   network: DEFAULT_CONFIG.network,
   contractAddress: DEFAULT_CONFIG.contractAddress,
@@ -20,13 +22,14 @@ const elements = {
   connection: $("connection-state"), networkLabel: $("network-label"), account: $("account-label"), notice: $("notice-text"),
   register: $("register-form"), freeze: $("freeze-button"), assess: $("assess-button"), refresh: $("refresh-button"),
   caseId: $("case-id"), productId: $("product-id"), version: $("version"), edition: $("edition"), region: $("region"), policyUrl: $("policy-url"), observedDate: $("observed-date"),
-  empty: $("empty-result"), result: $("result-content"), outcome: $("outcome"), caseState: $("case-state"), readCaseId: $("read-case-id"), readProduct: $("read-product"), readScope: $("read-scope"), readDate: $("read-date"), readWindow: $("read-window"), readRetries: $("read-retries"), digest: $("evidence-digest"), policyLink: $("policy-link"),
+  empty: $("empty-result"), result: $("result-content"), outcome: $("outcome"), caseState: $("case-state"), readCaseId: $("read-case-id"), readProduct: $("read-product"), readScope: $("read-scope"), readDate: $("read-date"), readWindow: $("read-window"), readRetries: $("read-retries"), digest: $("evidence-digest"), policyLink: $("policy-link"), txEvidence: $("tx-evidence"), txHash: $("tx-hash"), copyTx: $("copy-tx"), txLink: $("tx-link"),
 };
 
 function showNotice(message, error = false) {
   elements.notice.textContent = message;
   elements.notice.parentElement.style.background = error ? "#f5e3df" : "#e9e6dc";
   elements.notice.parentElement.style.color = error ? "#7b3029" : "#5b625c";
+  elements.notice.parentElement.setAttribute("role", error ? "alert" : "status");
 }
 
 function selectedChain() { return CHAINS[state.network]; }
@@ -45,21 +48,31 @@ function currentFormCase() { return { case_id: elements.caseId.value.trim(), pro
 
 function announceProvider(event) {
   const detail = event.detail;
-  if (!detail?.provider || !detail.info?.uuid) return;
-  state.providerInfo.set(detail.info.uuid, { info: detail.info, provider: detail.provider });
+  const brand = supportedBrand(detail?.info);
+  if (!detail?.provider || !detail.info?.uuid || !brand) return;
+  state.providerInfo.delete("legacy");
+  state.providerInfo.set(brand, { info: { ...detail.info, brand }, provider: detail.provider });
   renderProviders();
+}
+function supportedBrand(info) {
+  const rdns = String(info?.rdns || "").toLowerCase();
+  const name = String(info?.name || "").toLowerCase();
+  if (rdns.includes("metamask") || name.includes("metamask")) return "metamask";
+  if (rdns.includes("okex") || rdns.includes("okx") || name.includes("okx")) return "okx";
+  if (rdns.includes("rabby") || name.includes("rabby")) return "rabby";
+  return "";
 }
 function renderProviders() {
   const entries = [...state.providerInfo.values()];
   elements.providers.replaceChildren();
-  if (!entries.length) { elements.providers.add(new Option("No EIP-6963 provider found", "")); return; }
-  entries.forEach(({ info }) => elements.providers.add(new Option(`${info.name || "Wallet"} · ${info.rdns || info.uuid}`, info.uuid)));
+  if (!entries.length) { elements.providers.add(new Option("No supported wallet detected", "")); return; }
+  entries.forEach(({ info }) => elements.providers.add(new Option(SUPPORTED_WALLETS[info.brand] || "Supported wallet", info.brand || info.uuid)));
 }
 async function discoverProviders() {
   window.addEventListener("eip6963:announceProvider", announceProvider);
   window.dispatchEvent(new Event("eip6963:requestProvider"));
   await new Promise((resolve) => setTimeout(resolve, 350));
-  if (!state.providerInfo.size && window.ethereum) state.providerInfo.set("legacy", { info: { name: "Browser wallet (legacy)", uuid: "legacy" }, provider: window.ethereum });
+  if (!state.providerInfo.size && window.ethereum?.isMetaMask) state.providerInfo.set("metamask", { info: { name: "MetaMask", brand: "metamask", uuid: "legacy" }, provider: window.ethereum });
   renderProviders();
 }
 async function connectWallet() {
@@ -72,6 +85,7 @@ async function connectWallet() {
     if (!accounts?.[0]) throw new Error("The wallet returned no account.");
     state.account = accounts[0];
     clients();
+    bindProviderEvents(state.provider);
     if (state.writeClient?.connect) await state.writeClient.connect(state.network);
     elements.connection.textContent = "Wallet ready";
     elements.account.textContent = `${short(state.account)} · ${selected.info.name}`;
@@ -82,6 +96,28 @@ async function connectWallet() {
     updateButtons();
   } catch (error) { showNotice(error.message || String(error), true); }
 }
+function bindProviderEvents(provider) {
+  if (!provider?.on || boundProviders.has(provider)) return;
+  boundProviders.add(provider);
+  provider.on("accountsChanged", (accounts) => {
+    state.account = accounts?.[0] || null;
+    state.writeClient = state.account ? createClient({ chain: selectedChain(), account: state.account, provider }) : null;
+    resetCaseContext();
+    elements.account.textContent = state.account ? short(state.account) : "No account selected.";
+    elements.connection.textContent = state.account ? "Wallet ready" : "Reconnect required";
+    showNotice(state.account ? "Account changed. Readback context was cleared." : "Wallet disconnected. Connect again.", !state.account);
+    updateButtons();
+  });
+  provider.on("chainChanged", () => {
+    state.account = null;
+    state.writeClient = null;
+    resetCaseContext();
+    elements.connection.textContent = "Reconnect required";
+    elements.account.textContent = "Network changed; connect again.";
+    showNotice("Wallet network changed. Reconnect to the selected GenLayer network.", true);
+    updateButtons();
+  });
+}
 
 async function waitFinalized(hash) {
   const receipt = await state.readClient.waitForTransactionReceipt({ hash, status: "FINALIZED" });
@@ -90,7 +126,7 @@ async function waitFinalized(hash) {
 }
 async function write(functionName, args, button, pendingLabel) {
   assertReady(true); setBusy(button, true, pendingLabel);
-  try { const hash = await state.writeClient.writeContract({ address: state.contractAddress, functionName, args, value: 0n }); showNotice(`Submitted ${functionName}. Waiting for finality…`); await waitFinalized(hash); showNotice(`${functionName} finalized: ${short(hash)}`); return hash; }
+  try { const hash = await state.writeClient.writeContract({ address: state.contractAddress, functionName, args, value: 0n }); renderTransaction(hash); showNotice(`Submitted ${functionName}. Waiting for finality…`); await waitFinalized(hash); showNotice(`${functionName} finalized: ${short(hash)}`); return hash; }
   finally { setBusy(button, false); updateButtons(); }
 }
 async function register(event) {
@@ -115,6 +151,17 @@ function renderRecord(record) {
   elements.empty.classList.add("hidden"); elements.result.classList.remove("hidden"); elements.outcome.textContent = value.outcome || "DRAFT"; elements.caseState.textContent = value.state || "—";
   elements.readCaseId.textContent = value.case_id || state.lastCaseId || "—"; elements.readProduct.textContent = `${value.product_id || "—"} / ${value.version || "—"}`; elements.readScope.textContent = `${value.edition || "—"} / ${value.region || "—"}`; elements.readDate.textContent = value.observed_date || "—"; elements.readWindow.textContent = value.support_start && value.support_end ? `${value.support_start} → ${value.support_end}` : "—"; elements.readRetries.textContent = String(value.retry_count ?? 0); elements.digest.textContent = value.evidence_digest || "—"; elements.policyLink.href = /^https:\/\//i.test(policy) ? policy : "#";
 }
+function renderTransaction(hash) {
+  elements.txEvidence.classList.remove("hidden");
+  elements.txHash.textContent = hash;
+  elements.txLink.href = `${EXPLORERS[state.network]}/tx/${hash}`;
+}
+async function copyTransaction() {
+  const hash = elements.txHash.textContent;
+  if (!hash || hash === "—") return;
+  try { await navigator.clipboard.writeText(hash); showNotice("Transaction hash copied."); }
+  catch { showNotice("Copy is unavailable; select the transaction hash manually.", true); }
+}
 function resetCaseContext() {
   state.lastCaseId = "";
   elements.empty.classList.remove("hidden");
@@ -128,5 +175,5 @@ elements.network.value = state.network; elements.address.value = state.contractA
 elements.network.addEventListener("change", () => { state.network = elements.network.value; state.provider = null; state.account = null; resetCaseContext(); clients(); elements.connection.textContent = "Reconnect required"; elements.account.textContent = "Network changed; connect again."; elements.networkLabel.textContent = state.network; updateButtons(); });
 elements.address.addEventListener("input", () => { state.contractAddress = elements.address.value.trim(); resetCaseContext(); updateButtons(); });
 elements.providers.addEventListener("change", () => { state.provider = state.providerInfo.get(elements.providers.value)?.provider || null; });
-elements.connect.addEventListener("click", connectWallet); elements.register.addEventListener("submit", register); elements.freeze.addEventListener("click", freeze); elements.assess.addEventListener("click", assess); elements.refresh.addEventListener("click", () => readCase());
+elements.connect.addEventListener("click", connectWallet); elements.register.addEventListener("submit", register); elements.freeze.addEventListener("click", freeze); elements.assess.addEventListener("click", assess); elements.refresh.addEventListener("click", () => readCase()); elements.copyTx.addEventListener("click", copyTransaction);
 clients(); discoverProviders(); updateButtons();

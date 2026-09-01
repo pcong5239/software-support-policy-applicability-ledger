@@ -10,3 +10,8 @@ export const NETWORKS = Object.freeze({
   testnetBradbury: "testnetBradbury",
 });
 
+export const EXPLORERS = Object.freeze({
+  localnet: "http://localhost:8080",
+  studionet: "https://explorer-studio.genlayer.com",
+  testnetBradbury: "https://explorer-bradbury.genlayer.com",
+});
