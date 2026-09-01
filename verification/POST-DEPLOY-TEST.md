@@ -31,6 +31,20 @@ All rows were executed in Codex In-app Browser Studio with Simulation Mode disab
 - `has_case("live-20260901-01")` at `FINALIZED`: `true`.
 - `get_case("live-20260901-01")` at `FINALIZED` returned the persisted owner, product, version, edition, region, HTTPS policy URL, assessed date, outcome, state, and retry count shown above.
 - The live URL intentionally returns ordinary HTML rather than the required policy JSON; the contract therefore failed closed to `POLICY_SCOPE_UNCLEAR`. This validates the safe malformed-policy consequence through live Web Access without manufacturing a public policy document.
+- Machine-readable receipt summary: `verification/studionet-receipts.json`.
+
+## Authoritative Studionet API recheck
+
+On 2026-09-01, each live write hash was queried directly at `https://studio.genlayer.com/api` using JSON-RPC methods `eth_getTransactionByHash` and `eth_getTransactionReceipt`. The API returned the same hash as `tx_id` and `transactionHash`, `status=FINALIZED`, `result_name=MAJORITY_AGREE`, a validator `execution_result=SUCCESS`, and receipt `status=0x1` for every row:
+
+| Case | `eth_getTransactionByHash` | `eth_getTransactionReceipt` |
+|---|---|---|
+| PD-01 register | hash/tx_id `0xc0f0348850dc66de14e8ac958fd7c94ebb9db2a39ff715e0d590c21ea163121a`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
+| PD-02 freeze | hash/tx_id `0xed97ace7d19c9071765764076fb559e539adb74d7f3d6d95aaa3050f76e56bf8`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
+| PD-03 assess | hash/tx_id `0xa5dc1cb6842c556d80bd1717c2d16efb4ddc4e20f3b1f0b4242712fc1b70b412`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
+| PD-04 retry | hash/tx_id `0x4da42bfe136cff265a388e30ff36431a7b5b8af61f7ce22365a1c1d33d653d38`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
+
+This direct RPC evidence resolves the prior claim that PD-01 was not found. No replacement transaction was created; the original PD-01 hash is authoritative and reproducible through both canonical RPC methods.
 
 ## Receipt observations
 

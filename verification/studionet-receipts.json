@@ -1,0 +1,44 @@
+{
+  "checked_at": "2026-09-01",
+  "rpc": "https://studio.genlayer.com/api",
+  "methods": ["eth_getTransactionByHash", "eth_getTransactionReceipt"],
+  "contract": "0x97375A261D51ec8B90D4DE44eD5Ea4711a598355",
+  "receipts": [
+    {
+      "case": "PD-01",
+      "hash": "0xc0f0348850dc66de14e8ac958fd7c94ebb9db2a39ff715e0d590c21ea163121a",
+      "status": "FINALIZED",
+      "result_name": "MAJORITY_AGREE",
+      "execution_result": "SUCCESS",
+      "receipt_status": "0x1",
+      "receipt_transaction_hash_matches": true
+    },
+    {
+      "case": "PD-02",
+      "hash": "0xed97ace7d19c9071765764076fb559e539adb74d7f3d6d95aaa3050f76e56bf8",
+      "status": "FINALIZED",
+      "result_name": "MAJORITY_AGREE",
+      "execution_result": "SUCCESS",
+      "receipt_status": "0x1",
+      "receipt_transaction_hash_matches": true
+    },
+    {
+      "case": "PD-03",
+      "hash": "0xa5dc1cb6842c556d80bd1717c2d16efb4ddc4e20f3b1f0b4242712fc1b70b412",
+      "status": "FINALIZED",
+      "result_name": "MAJORITY_AGREE",
+      "execution_result": "SUCCESS",
+      "receipt_status": "0x1",
+      "receipt_transaction_hash_matches": true
+    },
+    {
+      "case": "PD-04",
+      "hash": "0x4da42bfe136cff265a388e30ff36431a7b5b8af61f7ce22365a1c1d33d653d38",
+      "status": "FINALIZED",
+      "result_name": "MAJORITY_AGREE",
+      "execution_result": "SUCCESS",
+      "receipt_status": "0x1",
+      "receipt_transaction_hash_matches": true
+    }
+  ]
+}

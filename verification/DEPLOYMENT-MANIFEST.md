@@ -48,3 +48,7 @@ Direct Mode and local tests validate contract behavior and failure handling only
 - Deployment recipient/to: `0x97375A261D51ec8B90D4DE44eD5Ea4711a598355`.
 - Consensus result: `MAJORITY_AGREE`; consensus history reached `ACCEPTED` before `FINALIZED`.
 - Initial validator set: 5; three validators agreed and two were cancelled after quorum.
+
+## Authoritative API recheck
+
+- On 2026-09-01, `eth_getTransactionByHash` and `eth_getTransactionReceipt` at `https://studio.genlayer.com/api` returned the deployment hash and all four live write hashes. Each returned `FINALIZED`, `MAJORITY_AGREE`, validator execution `SUCCESS`, matching `transactionHash`, and receipt `status=0x1`.
