@@ -4,7 +4,7 @@
 
 - Project: Software Support Policy Applicability Ledger
 - Category: GenLayer Intelligent Contract with browser dApp
-- Exact source revision commit: `10685e30d95b816a88f84dfa0fd6db2a464e87b0`
+- Exact source revision commit: `1cbbb172fefcfbc7ed02e7ded3b69c4e1014ac86`
 - Contract source: `contracts/support_policy_ledger.py`
 - Contract source SHA-256: `314824D86E3CFF276E885E930F619717449D76D6AA5B8D364F4F37C41C4E6E8B`
 - Network target: Studionet
@@ -20,6 +20,8 @@
 - Leader and validator independently derive the consequence. Consensus compares outcome and support-window fields, not validator-local evidence digests.
 - Version bounds and date bounds are explicit and inclusive/exclusive; edition and region exclusions are evaluated before support-window bounds.
 - The browser renders contract readback as the source of truth and waits for `FINALIZED` plus `FINISHED_WITH_RETURN` before dependent actions.
+- The browser wallet selector is explicit and limited to MetaMask, OKX Wallet, and Rabby; account/chain changes clear the active case context.
+- Each consequential write retains the full transaction hash, offers copy, and links to the verified Studionet Explorer transaction route.
 
 ## Exact verification evidence
 
@@ -39,6 +41,7 @@ Results at this revision:
 - Direct-mode and verification suite: PASS; `15 passed`.
 - Frontend JavaScript syntax: PASS.
 - Static HTTP smoke: PASS; `frontend/index.html`, `frontend/app.js`, and `frontend/styles.css` each returned HTTP 200 from a local server.
+- Wallet/transaction UI static checks: PASS; unsupported provider labels are excluded and the hash/copy/Explorer evidence elements are present.
 - Informational warning: `I200` reports a newer runner is available. No replacement runner or package was installed.
 
 ## Feasibility and runtime note
