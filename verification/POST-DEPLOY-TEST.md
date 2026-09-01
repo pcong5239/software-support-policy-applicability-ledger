@@ -2,6 +2,10 @@
 
 This record is bound to the exact deployed source and Studionet instance below. It contains no private key, seed phrase, wallet export, or session credential.
 
+## Current gate status
+
+`POST_DEPLOY_TEST BLOCKED` — P0: PD-01 is not independently reproducible from the canonical Studionet API. The prior local observation is retained for audit history only; it is not sufficient authoritative evidence. No replacement transaction was created.
+
 ## Identity and deployment
 
 - Project: Software Support Policy Applicability Ledger
@@ -35,18 +39,16 @@ All rows were executed in Codex In-app Browser Studio with Simulation Mode disab
 
 ## Authoritative Studionet API recheck
 
-On 2026-09-01, each live write hash was queried directly at `https://studio.genlayer.com/api` using JSON-RPC methods `eth_getTransactionByHash` and `eth_getTransactionReceipt`. The API returned the same hash as `tx_id` and `transactionHash`, `status=FINALIZED`, `result_name=MAJORITY_AGREE`, a validator `execution_result=SUCCESS`, and receipt `status=0x1` for every row:
+An earlier local check on 2026-09-01 queried each live write hash at `https://studio.genlayer.com/api` using JSON-RPC methods `eth_getTransactionByHash` and `eth_getTransactionReceipt`. The following is historical evidence only; fresh independent review cannot reproduce PD-01, so the POST_DEPLOY gate remains blocked:
 
 | Case | `eth_getTransactionByHash` | `eth_getTransactionReceipt` |
 |---|---|---|
-| PD-01 register | hash/tx_id `0xc0f0348850dc66de14e8ac958fd7c94ebb9db2a39ff715e0d590c21ea163121a`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
+| PD-01 register | Historical observation: hash/tx_id `0xc0f0348850dc66de14e8ac958fd7c94ebb9db2a39ff715e0d590c21ea163121a`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | Historical observation: transactionHash matched; `status=0x1`; `blockNumber=0x0`; current reproducibility `UNVERIFIABLE` |
 | PD-02 freeze | hash/tx_id `0xed97ace7d19c9071765764076fb559e539adb74d7f3d6d95aaa3050f76e56bf8`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
 | PD-03 assess | hash/tx_id `0xa5dc1cb6842c556d80bd1717c2d16efb4ddc4e20f3b1f0b4242712fc1b70b412`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
 | PD-04 retry | hash/tx_id `0x4da42bfe136cff265a388e30ff36431a7b5b8af61f7ce22365a1c1d33d653d38`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
 
-This direct RPC evidence resolves the prior claim that PD-01 was not found. No replacement transaction was created; the original PD-01 hash is authoritative and reproducible through both canonical RPC methods.
-
-Latest direct recheck: `2026-09-01T03:22:02.9116649Z` UTC. It returned the same PD-01 hash from both methods; the machine-readable details are in `verification/studionet-receipts.json`.
+An earlier local observation at `2026-09-01T03:22:02.9116649Z` UTC returned PD-01 from both methods, but the fresh independent review reports `-32001 Transaction not found` and `result: null` for the same hash. Because the result is not independently reproducible, this package does not treat PD-01 as authoritative. The machine-readable record preserves that distinction in `verification/studionet-receipts.json`.
 
 ## Receipt observations
 

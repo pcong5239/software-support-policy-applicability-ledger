@@ -51,4 +51,4 @@ Direct Mode and local tests validate contract behavior and failure handling only
 
 ## Authoritative API recheck
 
-- On 2026-09-01, `eth_getTransactionByHash` and `eth_getTransactionReceipt` at `https://studio.genlayer.com/api` returned the deployment hash and all four live write hashes. Each returned `FINALIZED`, `MAJORITY_AGREE`, validator execution `SUCCESS`, matching `transactionHash`, and receipt `status=0x1`.
+- A prior local observation returned the deployment hash and all four live write hashes through `eth_getTransactionByHash` and `eth_getTransactionReceipt`; however, fresh independent review currently reports PD-01 as not found/null. PD-01 is therefore marked unverifiable and the POST_DEPLOY gate remains blocked. No replacement transaction was created.
