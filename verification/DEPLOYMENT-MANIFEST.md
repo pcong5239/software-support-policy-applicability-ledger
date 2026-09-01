@@ -16,15 +16,16 @@ This file is a deployment input and recovery record. It contains no private key,
 
 ## Exact source identity
 
-- Source revision commit: pending final source commit
-- Contract source SHA-256: `314824D86E3CFF276E885E930F619717449D76D6AA5B8D364F4F37C41C4E6E8B` (refresh after source changes)
+- Source revision commit: `c53f6156e0bf8ff2f86339df5677e2149bd5c48b`
+- Contract source SHA-256: `314824D86E3CFF276E885E930F619717449D76D6AA5B8D364F4F37C41C4E6E8B`
 - Evidence package commit: pending package commit
 
 ## Ownership and lifecycle
 
-- Studio deployer public address: pending human selection
-- Studio deployer role: pending human selection
-- Lifecycle classification: `INTENTIONALLY FROZEN` is pending explicit user confirmation.
+- Studio deployer public address: `0x34b92E6553eaCA11A00A9d86d75d8a7881779D78`
+- Studio deployer role: `deployer` for this intentionally frozen release; no upgrade path is advertised.
+- Lifecycle classification: `INTENTIONALLY FROZEN`.
+- User confirmation: received in the primary Task on 2026-09-01: "I confirm this contract is INTENTIONALLY FROZEN; a post-deploy defect may require deploying a new contract."
 - If frozen is confirmed, a post-deploy defect cannot be repaired in place; the recovery path is a new deployment and frontend reconfiguration.
 
 ## Interfaces and dependencies
