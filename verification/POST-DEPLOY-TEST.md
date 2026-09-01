@@ -4,7 +4,7 @@ This record is bound to the exact deployed source and Studionet instance below. 
 
 ## Current gate status
 
-`POST_DEPLOY_TEST BLOCKED` — P0: PD-01 is not independently reproducible from the canonical Studionet API. The prior local observation is retained for audit history only; it is not sufficient authoritative evidence. No replacement transaction was created.
+Fresh replacement matrix recorded after explicit user authorization on 2026-09-01. The previously unverifiable `PD-01` is superseded by `PD-01R`; no source change, contract upgrade, or redeploy occurred. Anonymous `POST_DEPLOY_TEST` re-review is pending.
 
 ## Identity and deployment
 
@@ -25,30 +25,32 @@ All rows were executed in Codex In-app Browser Studio with Simulation Mode disab
 
 | Case | Method and arguments | Transaction hash | Output | Final readback |
 |---|---|---|---|---|
-| PD-01 register | `register_case("live-20260901-01", "support-agent", "1.0.0", "standard", "global", "https://example.com/")` | `0xc0f0348850dc66de14e8ac958fd7c94ebb9db2a39ff715e0d590c21ea163121a` | `"live-20260901-01"` | `get_case` at `FINALIZED`: `state=DRAFT`, owner equals deployer, all registration fields match |
-| PD-02 freeze | `freeze_case("live-20260901-01")` | `0xed97ace7d19c9071765764076fb559e539adb74d7f3d6d95aaa3050f76e56bf8` | `"live-20260901-01"` | `get_case` at `FINALIZED`: `state=FROZEN` |
-| PD-03 assess | `assess("live-20260901-01", "2026-09-01")` | `0xa5dc1cb6842c556d80bd1717c2d16efb4ddc4e20f3b1f0b4242712fc1b70b412` | `POLICY_SCOPE_UNCLEAR` | `get_case` at `FINALIZED`: `state=ASSESSED`, `outcome=POLICY_SCOPE_UNCLEAR`, `observed_date=2026-09-01` |
-| PD-04 retry | `retry_unresolved("live-20260901-01")` | `0x4da42bfe136cff265a388e30ff36431a7b5b8af61f7ce22365a1c1d33d653d38` | `POLICY_SCOPE_UNCLEAR` | `get_case` at `FINALIZED`: `state=ASSESSED`, `outcome=POLICY_SCOPE_UNCLEAR`, `retry_count=1` |
+| PD-01R register | `register_case("live-20260901-02", "support-agent", "1.0.0", "standard", "global", "https://example.com/")` | `0xa47f473653a0473ceecb168a2544c8fbe7a62e5df75b093e2972c449e48ffde4` | `"live-20260901-02"` | `get_case` at `FINALIZED`: `state=DRAFT`, owner equals deployer, all registration fields match |
+| PD-02R freeze | `freeze_case("live-20260901-02")` | `0x3412087594d90dfa89ca03db5a91bf503f9689168d2ec0fec187f2132988cded` | `"live-20260901-02"` | `get_case` at `FINALIZED`: `state=FROZEN` |
+| PD-03R assess | `assess("live-20260901-02", "2026-09-01")` | `0xfbc4865f99fe9e756429a114293bffde26b2c9efbeeca919ea204337c03580e4` | `POLICY_SCOPE_UNCLEAR` | `get_case` at `FINALIZED`: `state=ASSESSED`, `outcome=POLICY_SCOPE_UNCLEAR`, `observed_date=2026-09-01` |
+| PD-04R retry | `retry_unresolved("live-20260901-02")` | `0xa26d1ed76a05790ef6e8fbf965eb598dfb6f6eb4ea51cbecbb35ba6125725623` | `POLICY_SCOPE_UNCLEAR` | `get_case` at `FINALIZED`: `state=ASSESSED`, `outcome=POLICY_SCOPE_UNCLEAR`, `retry_count=1` |
 
 ## View checks
 
-- `has_case("live-20260901-01")` at `FINALIZED`: `true`.
-- `get_case("live-20260901-01")` at `FINALIZED` returned the persisted owner, product, version, edition, region, HTTPS policy URL, assessed date, outcome, state, and retry count shown above.
+- `has_case("live-20260901-02")` at `FINALIZED`: `true`.
+- `get_case("live-20260901-02")` at `FINALIZED` returned the persisted owner, product, version, edition, region, HTTPS policy URL, assessed date, outcome, state, and retry count shown above.
 - The live URL intentionally returns ordinary HTML rather than the required policy JSON; the contract therefore failed closed to `POLICY_SCOPE_UNCLEAR`. This validates the safe malformed-policy consequence through live Web Access without manufacturing a public policy document.
 - Machine-readable receipt summary: `verification/studionet-receipts.json`.
 
 ## Authoritative Studionet API recheck
 
-An earlier local check on 2026-09-01 queried each live write hash at `https://studio.genlayer.com/api` using JSON-RPC methods `eth_getTransactionByHash` and `eth_getTransactionReceipt`. The following is historical evidence only; fresh independent review cannot reproduce PD-01, so the POST_DEPLOY gate remains blocked:
+The fresh replacement matrix was queried directly at `https://studio.genlayer.com/api` using JSON-RPC methods `eth_getTransactionByHash` and `eth_getTransactionReceipt`:
+
+Latest four-hash canonical recheck: `2026-09-01T03:36:21.0314205Z` UTC. All four returned matching transaction identities, `FINALIZED`, `MAJORITY_AGREE`, validator success, and receipt `status=0x1`.
 
 | Case | `eth_getTransactionByHash` | `eth_getTransactionReceipt` |
 |---|---|---|
-| PD-01 register | Historical observation: hash/tx_id `0xc0f0348850dc66de14e8ac958fd7c94ebb9db2a39ff715e0d590c21ea163121a`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | Historical observation: transactionHash matched; `status=0x1`; `blockNumber=0x0`; current reproducibility `UNVERIFIABLE` |
-| PD-02 freeze | hash/tx_id `0xed97ace7d19c9071765764076fb559e539adb74d7f3d6d95aaa3050f76e56bf8`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
-| PD-03 assess | hash/tx_id `0xa5dc1cb6842c556d80bd1717c2d16efb4ddc4e20f3b1f0b4242712fc1b70b412`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
-| PD-04 retry | hash/tx_id `0x4da42bfe136cff265a388e30ff36431a7b5b8af61f7ce22365a1c1d33d653d38`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
+| PD-01R register | hash/tx_id `0xa47f473653a0473ceecb168a2544c8fbe7a62e5df75b093e2972c449e48ffde4`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
+| PD-02R freeze | hash/tx_id `0x3412087594d90dfa89ca03db5a91bf503f9689168d2ec0fec187f2132988cded`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
+| PD-03R assess | hash/tx_id `0xfbc4865f99fe9e756429a114293bffde26b2c9efbeeca919ea204337c03580e4`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
+| PD-04R retry | hash/tx_id `0xa26d1ed76a05790ef6e8fbf965eb598dfb6f6eb4ea51cbecbb35ba6125725623`; `FINALIZED`; `MAJORITY_AGREE`; validator execution `SUCCESS` | transactionHash matches; `status=0x1`; `blockNumber=0x0` |
 
-An earlier local observation at `2026-09-01T03:22:02.9116649Z` UTC returned PD-01 from both methods, but the fresh independent review reports `-32001 Transaction not found` and `result: null` for the same hash. Because the result is not independently reproducible, this package does not treat PD-01 as authoritative. The machine-readable record preserves that distinction in `verification/studionet-receipts.json`.
+The old `live-20260901-01` case and its non-reproducible PD-01 receipt remain superseded audit history. The fresh `live-20260901-02` matrix is the candidate authoritative evidence for re-review; its machine-readable receipts are in `verification/studionet-receipts.json`.
 
 ## Receipt observations
 

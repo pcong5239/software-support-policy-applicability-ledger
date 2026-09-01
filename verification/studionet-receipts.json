@@ -3,25 +3,15 @@
   "rpc": "https://studio.genlayer.com/api",
   "methods": ["eth_getTransactionByHash", "eth_getTransactionReceipt"],
   "contract": "0x97375A261D51ec8B90D4DE44eD5Ea4711a598355",
-  "reproducibility_status": "BLOCKED_P0_PD01",
-  "blocking_finding": "Fresh independent canonical queries report PD-01 as not found/null. A prior local observation is retained only as historical evidence and is not treated as authoritative.",
-  "latest_local_observation_utc": "2026-09-01T03:22:02.9116649Z",
+  "supersedes_case": "live-20260901-01",
+  "replacement_authorization": "User authorized a fresh matrix in the primary task on 2026-09-01.",
+  "latest_canonical_recheck_utc": "2026-09-01T03:36:21.0314205Z",
   "receipts": [
     {
-      "case": "PD-01",
-      "hash": "0xc0f0348850dc66de14e8ac958fd7c94ebb9db2a39ff715e0d590c21ea163121a",
-      "historical_observation": {
-        "status": "FINALIZED",
-        "result_name": "MAJORITY_AGREE",
-        "execution_result": "SUCCESS",
-        "receipt_status": "0x1",
-        "receipt_transaction_hash_matches": true
-      },
-      "current_authoritative_reproducibility": "UNVERIFIABLE"
-    },
-    {
-      "case": "PD-02",
-      "hash": "0xed97ace7d19c9071765764076fb559e539adb74d7f3d6d95aaa3050f76e56bf8",
+      "case": "PD-01R",
+      "case_id": "live-20260901-02",
+      "method": "register_case",
+      "hash": "0xa47f473653a0473ceecb168a2544c8fbe7a62e5df75b093e2972c449e48ffde4",
       "status": "FINALIZED",
       "result_name": "MAJORITY_AGREE",
       "execution_result": "SUCCESS",
@@ -29,8 +19,10 @@
       "receipt_transaction_hash_matches": true
     },
     {
-      "case": "PD-03",
-      "hash": "0xa5dc1cb6842c556d80bd1717c2d16efb4ddc4e20f3b1f0b4242712fc1b70b412",
+      "case": "PD-02R",
+      "case_id": "live-20260901-02",
+      "method": "freeze_case",
+      "hash": "0x3412087594d90dfa89ca03db5a91bf503f9689168d2ec0fec187f2132988cded",
       "status": "FINALIZED",
       "result_name": "MAJORITY_AGREE",
       "execution_result": "SUCCESS",
@@ -38,8 +30,21 @@
       "receipt_transaction_hash_matches": true
     },
     {
-      "case": "PD-04",
-      "hash": "0x4da42bfe136cff265a388e30ff36431a7b5b8af61f7ce22365a1c1d33d653d38",
+      "case": "PD-03R",
+      "case_id": "live-20260901-02",
+      "method": "assess",
+      "hash": "0xfbc4865f99fe9e756429a114293bffde26b2c9efbeeca919ea204337c03580e4",
+      "status": "FINALIZED",
+      "result_name": "MAJORITY_AGREE",
+      "execution_result": "SUCCESS",
+      "receipt_status": "0x1",
+      "receipt_transaction_hash_matches": true
+    },
+    {
+      "case": "PD-04R",
+      "case_id": "live-20260901-02",
+      "method": "retry_unresolved",
+      "hash": "0xa26d1ed76a05790ef6e8fbf965eb598dfb6f6eb4ea51cbecbb35ba6125725623",
       "status": "FINALIZED",
       "result_name": "MAJORITY_AGREE",
       "execution_result": "SUCCESS",

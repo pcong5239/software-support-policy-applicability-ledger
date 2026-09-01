@@ -51,4 +51,4 @@ Direct Mode and local tests validate contract behavior and failure handling only
 
 ## Authoritative API recheck
 
-- A prior local observation returned the deployment hash and all four live write hashes through `eth_getTransactionByHash` and `eth_getTransactionReceipt`; however, fresh independent review currently reports PD-01 as not found/null. PD-01 is therefore marked unverifiable and the POST_DEPLOY gate remains blocked. No replacement transaction was created.
+- A fresh authorized live matrix (`live-20260901-02`) returned all four write hashes through `eth_getTransactionByHash` and `eth_getTransactionReceipt`; each returned `FINALIZED`, `MAJORITY_AGREE`, validator execution `SUCCESS`, matching `transactionHash`, and receipt `status=0x1`. The earlier `live-20260901-01` PD-01 is superseded audit history.
