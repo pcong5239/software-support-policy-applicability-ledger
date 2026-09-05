@@ -7,8 +7,10 @@
 - Network: Studionet, chain ID `61999`
 - Contract: [`0x97375A261D51ec8B90D4DE44eD5Ea4711a598355`](https://explorer-studio.genlayer.com/address/0x97375A261D51ec8B90D4DE44eD5Ea4711a598355)
 - Deployment transaction: [`0xda771a514a82cdbb214dc1864f6ee7479bcf8929a8763f65eb8839512d0ba6b5`](https://explorer-studio.genlayer.com/tx/0xda771a514a82cdbb214dc1864f6ee7479bcf8929a8763f65eb8839512d0ba6b5)
-- Vercel URL: pending exact final deployment
-- GitHub commit: pending public push
+- Vercel project: `pcong/software-support-policy-applicability-ledger`
+- Vercel production URL: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app)
+- Vercel deployment: `dpl_7d7mw2Q4Db9jWkZ7Jq6Micrm1rTR` (`READY`)
+- GitHub commit: [`279db208cecb440165c828fa2e0cd21a4d1ce680`](https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/279db208cecb440165c828fa2e0cd21a4d1ce680)
 
 ## Local checks
 
@@ -22,7 +24,7 @@ node tests/frontend_progress.test.js
 git diff --check
 ```
 
-Current result: contract lint/schema PASS; `18 passed`; frontend static checks PASS; public UI rendered review PASS at desktop and 360px; no console warnings/errors; no horizontal overflow at 360px; required DOM hooks present; no visible EIP-6963/RPC/chain-ID/provider/debug leakage.
+Current result: contract lint/schema PASS; `19 passed`; frontend static checks PASS; public UI rendered review PASS at desktop and 360px; no console warnings/errors; no horizontal overflow at 360px; required DOM hooks present; no visible EIP-6963/RPC/chain-ID/provider/debug leakage. The Vercel production deployment is `READY` and serves the application at HTTP 200; browser E2E and measured frontend RPC evidence remain pending.
 
 ## Deployed-source parity and live proof
 
@@ -30,4 +32,4 @@ The deployed contract source matches the SHA-256 above. The four fresh live rows
 
 ## Scope and limitations
 
-The current public release batch changes only frontend presentation, Studionet-only configuration, transaction-progress handling, and reviewer-facing documentation. Contract bytes, deployed address, deployment transaction, and Studio live evidence are unchanged. Vercel deployment and browser E2E are deliberately not claimed until measured on the exact final public release.
+The current public release batch changes only frontend presentation, Studionet-only configuration, transaction-progress handling, and public verification documentation. Contract bytes, deployed address, deployment transaction, and Studio live evidence are unchanged. Vercel production serving is verified; browser E2E and measured frontend RPC evidence are deliberately not claimed until the exact final public release completes that gate.

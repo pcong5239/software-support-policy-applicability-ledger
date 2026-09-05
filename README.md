@@ -6,7 +6,8 @@ Software Support Policy Applicability Ledger records a frozen software release a
 
 - Studionet contract: [`0x97375A261D51ec8B90D4DE44eD5Ea4711a598355`](https://explorer-studio.genlayer.com/address/0x97375A261D51ec8B90D4DE44eD5Ea4711a598355)
 - Deployment transaction: [`0xda771a514a82cdbb214dc1864f6ee7479bcf8929a8763f65eb8839512d0ba6b5`](https://explorer-studio.genlayer.com/tx/0xda771a514a82cdbb214dc1864f6ee7479bcf8929a8763f65eb8839512d0ba6b5)
-- Live application: added after the Vercel release is deployed and verified.
+- Live application: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app) (production deployment; browser E2E evidence is recorded separately).
+- GitHub repository: [`pcong5239/software-support-policy-applicability-ledger`](https://github.com/pcong5239/software-support-policy-applicability-ledger)
 
 ## The trust problem
 
@@ -80,7 +81,7 @@ The release is deployed on Studionet (chain ID `61999`) at `0x97375A261D51ec8B90
 
 - The current release uses the pinned compatibility client `genlayer-js@1.1.8`; its legacy receipt helper is retained while feature-detecting the current `waitForFinalization` lifecycle when available. The version boundary is documented in the RPC budget record.
 - A public HTTPS policy endpoint must return the bounded JSON shape described by the contract; unavailable, malformed, oversized, or contradictory policy evidence fails closed to an unresolved/unclear outcome.
-- The live application URL is not claimed until the Vercel deployment and browser E2E pass on the exact final release.
+- The production application is available at the verified URL above; browser E2E and measured frontend RPC evidence remain pending until the exact final release completes that gate.
 
 ## Repository layout
 

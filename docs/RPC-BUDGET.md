@@ -1,9 +1,9 @@
 # RPC Budget Record
 
-RPC_BUDGET_REVISION: contract c53f6156e0bf8ff2f86339df5677e2149bd5c48b; frontend release batch pending commit
+RPC_BUDGET_REVISION: contract c53f6156e0bf8ff2f86339df5677e2149bd5c48b; frontend release commit 279db208cecb440165c828fa2e0cd21a4d1ce680
 OFFICIAL_DOCS_CHECKED: https://docs.genlayer.com/api-references/genlayer-js and https://docs.genlayer.com/api-references/genlayer-node/gen/gen_getTransactionStatus; checked 2026-09-05 UTC
 
-The Studio and frontend scopes are measured separately. Studio evidence is inherited from the approved deployed package because this release batch does not change contract bytes, ABI, address, network, or Studio transactions. Frontend evidence is pending the Vercel release and will be measured on the exact final URL.
+The Studio and frontend scopes are measured separately. Studio evidence is inherited from the approved deployed package because this release batch does not change contract bytes, ABI, address, network, or Studio transactions. The exact Vercel production URL is deployed and serves the frontend; browser transaction measurements remain pending the controlled E2E run.
 
 ## STUDIO_SCOPE
 
@@ -57,6 +57,6 @@ FRONTEND_SCOPE: APPLICABLE
 - The coordinator emits `WAITING_FOR_WALLET`, `SUBMITTED`, `WAITING_FOR_FINALITY`, `VERIFYING_EXECUTION`, `VERIFYING_READBACK`, and terminal phases from actual promise/lifecycle outcomes.
 - A valid hash is persisted before verification; readback uncertainty becomes `RECONCILIATION_REQUIRED`, and no automatic write retry exists.
 - Local rendered review verified the disconnected initial state, no visible technical leakage, complete DOM hooks, desktop layout, 360px layout without horizontal overflow, and zero console warnings/errors.
-- Vercel measurement is not yet available because this document predates the Vercel deployment. It must be refreshed with exact URL, browser request counts, wallet path, transaction hashes, finality, readback, and any bounded defect sweep before `POST_GITHUB_VERCEL_FINAL`.
+- Vercel deployment: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app), deployment `dpl_7d7mw2Q4Db9jWkZ7Jq6Micrm1rTR`, `READY`, HTTP 200 for the application entrypoint. Browser request counts, wallet path, transaction hashes, finality, readback, and bounded defect-sweep evidence remain pending the controlled E2E run and must be added before `POST_GITHUB_VERCEL_FINAL`.
 - FRONTEND_MATRIX_STATUS: COMPLETE
 - FRONTEND_EVIDENCE_STATUS: PENDING_VERCEL_EXACT_RELEASE
