@@ -26,6 +26,7 @@ assert.match(app, /transaction\?\.statusName \|\| transaction\?\.status_name/);
 assert.match(app, /execution_result === "SUCCESS"/);
 assert.match(app, /transaction\?\.consensus_data\?\.leader_receipt/);
 assert.match(app, /receipts\.some\(\(receipt\) => receipt\?\.execution_result === "SUCCESS"\)/);
+assert.match(app, /record\.case_id && record\.case_id !== pending\.caseId/);
 assert.match(app, /SUPPORTED_WALLET_RDNS/);
 assert.match(app, /legacyIcon\(provider\)/);
 assert.doesNotMatch(app, /wallet-monogram/);

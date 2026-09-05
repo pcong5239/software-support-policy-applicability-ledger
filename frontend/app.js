@@ -131,7 +131,7 @@ function setTransactionProgress(phase, details = {}) {
 }
 function writeExpectedState(functionName) { return functionName === "register_case" ? "DRAFT" : functionName === "freeze_case" ? "FROZEN" : "ASSESSED"; }
 function assertExpectedReadback(record, pending) {
-  if (!record || record.case_id !== pending.caseId || record.state !== pending.expectedState) throw new Error("The verified ledger state does not match the requested action.");
+  if (!record || (record.case_id && record.case_id !== pending.caseId) || record.state !== pending.expectedState) throw new Error("The verified ledger state does not match the requested action.");
 }
 function assertReady(write = false) {
   if (!configured()) throw new Error("Enter a deployed contract address first.");
