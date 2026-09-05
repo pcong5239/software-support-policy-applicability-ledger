@@ -4,7 +4,7 @@ This record is bound to the exact deployed source and Studionet instance below. 
 
 ## Current gate status
 
-Fresh replacement matrix recorded after explicit user authorization on 2026-09-01. The previously unverifiable `PD-01` is superseded by `PD-01R`. The Studio contract and live matrix remain unchanged. The refreshed Vercel E2E plan is bound to frontend candidate commit `cbcdf0525ab6f2978f061c6f2ca21721e52c5700`; only frontend source, presentation tokens and frontend tests changed after the prior checkpoint.
+Fresh replacement matrix recorded after explicit user authorization on 2026-09-01. The previously unverifiable `PD-01` is superseded by `PD-01R`. The Studio contract and live matrix remain unchanged. The refreshed Vercel E2E plan is bound to frontend candidate commit `4d2c0b91d131cf0e98235e4e4e884f74480e3c6d`; only frontend source, presentation tokens and frontend tests changed after the prior checkpoint.
 
 ## Identity and deployment
 
@@ -22,8 +22,8 @@ Fresh replacement matrix recorded after explicit user authorization on 2026-09-0
 - Vercel project: `pcong/software-support-policy-applicability-ledger`
 - Vercel production URL: `https://software-support-policy-applicability-ledger-pcong.vercel.app`
 - Vercel serving root: `frontend/`; production entrypoint returned HTTP 200 and the expected application title.
-- Frontend candidate revision: `cbcdf0525ab6f2978f061c6f2ca21721e52c5700` (local exact source; not pushed or deployed at this checkpoint).
-- Candidate artifact SHA-256: `app.js` `8CA7EB991937118BF2311C64C65D45FF6C4D75EE14A65D8FBD1DC271663F9BA7`; `wallet-session.js` `32E4BFDC37F34381722B9197A6BB0D2E18A3C7543FB093DB0B5C2500A5C95144`; `index.html` `34F1153BB749910B6CE833CC7E2DD3E2F92FD32C7783B5218E793BE7DA17281B`; `styles.css` `A255AF3F84411A461F6C681A8E333820907340B46A568F965A01423D95CEC913`; `tokens.css` `80E5B33CB4C974E3C68ED7D9BA1F926CBA9BB023FCED3E8D302D08C38D889749`.
+- Frontend candidate revision: `4d2c0b91d131cf0e98235e4e4e884f74480e3c6d` (local exact source; not pushed or deployed at this checkpoint).
+- Candidate artifact SHA-256: `app.js` `50A0D5C6F187E0C5E23286A04542D2B752DCBC6B4240EF3DFAF0D2D60FF868E8`; `wallet-session.js` `7F2C20AA3B704E82B3C1BE114EE1D9226D61EB9282ED6DA9EED555AF4F830122`; `tests/wallet_session.test.js` `26B799441C39BB88243E4F21A29474CE34062B31962F57CDBF8B5056F1CA3265`; `index.html` `34F1153BB749910B6CE833CC7E2DD3E2F92FD32C7783B5218E793BE7DA17281B`; `styles.css` `A255AF3F84411A461F6C681A8E333820907340B46A568F965A01423D95CEC913`; `tokens.css` `80E5B33CB4C974E3C68ED7D9BA1F926CBA9BB023FCED3E8D302D08C38D889749`.
 
 ## Live transaction matrix
 
@@ -60,7 +60,7 @@ The old `live-20260901-01` case and its non-reproducible PD-01 receipt remain su
 
 ## Vercel E2E plan
 
-This plan is for the production URL above after it is updated to exact frontend candidate commit `cbcdf0525ab6f2978f061c6f2ca21721e52c5700`. It is a browser acceptance run, not a substitute for the contract matrix. The test wallet must be a separate supported wallet account and must not be the Studio deployer account.
+This plan is for the production URL above after it is updated to exact frontend candidate commit `4d2c0b91d131cf0e98235e4e4e884f74480e3c6d`. It is a browser acceptance run, not a substitute for the contract matrix. The test wallet must be a separate supported wallet account and must not be the Studio deployer account.
 
 ### Initial state and actor boundary
 
