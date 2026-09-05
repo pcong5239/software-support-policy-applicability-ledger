@@ -4,7 +4,7 @@ This record is bound to the exact deployed source and Studionet instance below. 
 
 ## Current gate status
 
-Fresh replacement matrix recorded after explicit user authorization on 2026-09-01. The previously unverifiable `PD-01` is superseded by `PD-01R`. The Studio contract and live matrix remain unchanged; the current release adds the verified frontend, public documentation and production serving path below. The Vercel E2E plan is bound to frontend release commit `704c6cfc9de3fe4d52f4d1ac021818de25efdc3b` and remains pending the controlled browser run.
+Fresh replacement matrix recorded after explicit user authorization on 2026-09-01. The previously unverifiable `PD-01` is superseded by `PD-01R`. The Studio contract and live matrix remain unchanged. The refreshed Vercel E2E plan is bound to frontend candidate commit `b8ef326f60e77ce5e1a4691cb9d59d59cb8493c9`; only frontend source, presentation tokens and frontend static tests changed after the prior checkpoint.
 
 ## Identity and deployment
 
@@ -22,6 +22,8 @@ Fresh replacement matrix recorded after explicit user authorization on 2026-09-0
 - Vercel project: `pcong/software-support-policy-applicability-ledger`
 - Vercel production URL: `https://software-support-policy-applicability-ledger-pcong.vercel.app`
 - Vercel serving root: `frontend/`; production entrypoint returned HTTP 200 and the expected application title.
+- Frontend candidate revision: `b8ef326f60e77ce5e1a4691cb9d59d59cb8493c9` (local exact source; not pushed or deployed at this checkpoint).
+- Candidate artifact SHA-256: `app.js` `DA125EAFD317FDA629916CD1C2548703EFA74F12F95983F929F7DA9B5A3F2EB3`; `index.html` `34F1153BB749910B6CE833CC7E2DD3E2F92FD32C7783B5218E793BE7DA17281B`; `styles.css` `A255AF3F84411A461F6C681A8E333820907340B46A568F965A01423D95CEC913`; `tokens.css` `80E5B33CB4C974E3C68ED7D9BA1F926CBA9BB023FCED3E8D302D08C38D889749`.
 
 ## Live transaction matrix
 
@@ -58,18 +60,18 @@ The old `live-20260901-01` case and its non-reproducible PD-01 receipt remain su
 
 ## Vercel E2E plan
 
-This plan is for the exact production URL and frontend release commit recorded above. It is a browser acceptance run, not a substitute for the contract matrix. The test wallet must be a separate supported wallet account and must not be the Studio deployer account.
+This plan is for the production URL above after it is updated to exact frontend candidate commit `b8ef326f60e77ce5e1a4691cb9d59d59cb8493c9`. It is a browser acceptance run, not a substitute for the contract matrix. The test wallet must be a separate supported wallet account and must not be the Studio deployer account.
 
 ### Initial state and actor boundary
 
 - Open the production URL in Google Chrome from a clean page state.
-- Confirm the visible initial state is disconnected, the network selector shows Studionet, the contract address is the deployed address, and only real detected wallet providers are offered.
+- Confirm the visible initial state is disconnected, the network selector shows Studionet, the contract address is the deployed address, and the chooser shows exactly the supported wallets actually detected (0–3), without requesting accounts until a wallet option is clicked.
 - Use one fresh external wallet account for the complete case. The user only confirms or rejects wallet popups; all navigation, form entry, waiting, readback and evidence capture remain under primary-AI control.
 - Do not use seeded case IDs or the Studio deployer account. Generate one unique case ID for this run and use the public HTTPS endpoint `https://example.com/` as the intentionally non-policy response; the expected safe outcome is `POLICY_SCOPE_UNCLEAR`.
 
 ### Ordered critical journey
 
-1. Select the detected wallet and connect. Verify the displayed account and correct Studionet connection before enabling writes.
+1. Open the chooser, select one detected wallet and connect. Verify its canonical name/icon, displayed account, correct Studionet connection, and atomic `Disconnect` action before enabling writes. Exercise wrong-network recovery only on `4902` if encountered; do not add the network otherwise.
 2. Enter the unique case ID, product `support-agent`, version `1.0.0`, edition `standard`, region `global`, and `https://example.com/`. Submit registration.
 3. For each write, capture the visible phase sequence `WAITING_FOR_WALLET` → `SUBMITTED` → `WAITING_FOR_FINALITY` → `VERIFYING_EXECUTION` → `VERIFYING_READBACK` → `SUCCESS`. Capture the full transaction hash, copy control and current Studionet Explorer link. Treat rejection, missing hash, non-finality, non-success execution or mismatched readback as failure; never submit a second transaction automatically.
 4. Freeze the registered case and verify authoritative readback is `FROZEN` before assessment is enabled.
@@ -80,7 +82,7 @@ This plan is for the exact production URL and frontend release commit recorded a
 
 - During the journey, record the exact URL, viewport, provider, account role (external wallet), every transaction hash, phase transitions, finality/semantic result, consensus result, authoritative readback and visible outcome.
 - Measure browser RPC traffic separately from Studio traffic using the browser's captured request/resource entries. For each action, record request source, method where exposed, planned maximum, actual count, polling attempts/interval, retry count/delay, cache/in-flight behavior, invalidation and transaction count in `docs/RPC-BUDGET.md`.
-- Sweep the shared risk surface after the first complete journey: disconnected load, provider discovery, wrong-network/account change handling, invalid form inputs, wallet rejection without a transaction, retained-hash/reconciliation controls, reload/reconnect, desktop and 360px layout, accessible live status, console errors and visible technical leakage.
+- Sweep the shared risk surface after the first complete journey: disconnected reload, provider cardinality/deduplication, chooser Escape/focus/close behavior, wrong-network/account/disconnect handling, invalid form inputs, wallet rejection without a transaction, retained-hash/reconciliation controls, reload/reconnect, desktop and 360px layout, accessible live status, console errors and visible technical leakage.
 - If any defect appears, preserve the exact evidence, finish only safe bounded checks, batch shared root causes, run the affected automated tests, deploy once for that batch, and rerun all failed/affected cases on the new exact release. Do not create a replacement transaction for an ambiguous write.
 
 ### Terminal criteria

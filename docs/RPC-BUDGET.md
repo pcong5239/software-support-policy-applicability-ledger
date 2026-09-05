@@ -1,6 +1,6 @@
 # RPC Budget Record
 
-RPC_BUDGET_REVISION: contract c53f6156e0bf8ff2f86339df5677e2149bd5c48b; frontend release commit 279db208cecb440165c828fa2e0cd21a4d1ce680
+RPC_BUDGET_REVISION: contract c53f6156e0bf8ff2f86339df5677e2149bd5c48b; frontend candidate commit b8ef326f60e77ce5e1a4691cb9d59d59cb8493c9
 OFFICIAL_DOCS_CHECKED: https://docs.genlayer.com/api-references/genlayer-js and https://docs.genlayer.com/api-references/genlayer-node/gen/gen_getTransactionStatus; checked 2026-09-05 UTC
 
 The Studio and frontend scopes are measured separately. Studio evidence is inherited from the approved deployed package because this release batch does not change contract bytes, ABI, address, network, or Studio transactions. The exact Vercel production URL is deployed and serves the frontend; browser transaction measurements remain pending the controlled E2E run.
@@ -42,7 +42,8 @@ FRONTEND_SCOPE: APPLICABLE
 | Screen/workflow | Request source | Planned maximum | Polling/retry | Cache/invalidation | Expected transactions |
 |---|---|---:|---|---|---:|
 | Initial load | One account-free `createClient` and provider discovery | 1 client setup; 0 contract reads | None | No stale cache | 0 |
-| Wallet connection | Explicit selected provider and client connection | 1 account request plus bounded chain validation | No automatic retry | Reset case context on account/network change | 0 |
+| Wallet discovery | Page-lifetime announcements plus one bounded legacy scan when chooser opens | 0 account requests; 0 contract reads | One 350 ms discovery window; no retry loop | Dedupe by wallet and provider identity | 0 |
+| Wallet connection | Explicit wallet-option click | 1 account request; 1 chain switch; add only on `4902`; 1 chain validation | One switch retry only after successful add | Atomically reset session/case context on account, chain or disconnect | 0 |
 | Register / freeze / assess | One selected-provider `writeContract` | 1 write; one bounded lifecycle wait; one readback | No automatic resubmission | Persist hash; invalidate case context after write | 1 each |
 | Finality and execution | `waitForFinalization({ hash })` when available, compatibility receipt helper otherwise | One bounded wait; terminal receipt only | Stop at finality/error | Retain hash through uncertainty | 0 |
 | Readback | Shared `readClient.readContract(get_case)` | 1 deliberate post-write read | No polling loop | No cache for verdict state | 0 |
@@ -56,7 +57,7 @@ FRONTEND_SCOPE: APPLICABLE
 - The current frontend batch uses one shared `readClient` per selected network and one provider-bound write client; it has no interval poller, recursive retry, duplicate write path, or competing read cache.
 - The coordinator emits `WAITING_FOR_WALLET`, `SUBMITTED`, `WAITING_FOR_FINALITY`, `VERIFYING_EXECUTION`, `VERIFYING_READBACK`, and terminal phases from actual promise/lifecycle outcomes.
 - A valid hash is persisted before verification; readback uncertainty becomes `RECONCILIATION_REQUIRED`, and no automatic write retry exists.
-- Local rendered review verified the disconnected initial state, no visible technical leakage, complete DOM hooks, desktop layout, 360px layout without horizontal overflow, and zero console warnings/errors.
+- Local integrated-browser review verified the disconnected initial state, native chooser focus, zero-wallet cardinality without fake options, no account request on chooser open, complete public instructions, and no visible technical leakage. Automated checks report `20 passed`.
 - Vercel production: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app), `READY`, HTTP 200 for the application entrypoint from the `frontend/` static root. Browser request counts, wallet path, transaction hashes, finality, readback, and bounded defect-sweep evidence remain pending the controlled E2E run and must be added before `POST_GITHUB_VERCEL_FINAL`.
 - FRONTEND_MATRIX_STATUS: COMPLETE
 - FRONTEND_EVIDENCE_STATUS: PENDING_VERCEL_EXACT_RELEASE
