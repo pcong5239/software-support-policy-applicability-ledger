@@ -1,6 +1,6 @@
 # RPC Budget Record
 
-RPC_BUDGET_REVISION: contract c53f6156e0bf8ff2f86339df5677e2149bd5c48b; frontend candidate commit c13e1ff2ebd508ba735a73dd52f372cd52e61787
+RPC_BUDGET_REVISION: contract c53f6156e0bf8ff2f86339df5677e2149bd5c48b; frontend candidate commit c6f93f9b7d8fd9f2229e1614a2abef4fd2ff016f
 OFFICIAL_DOCS_CHECKED: https://docs.genlayer.com/api-references/genlayer-js and https://docs.genlayer.com/api-references/genlayer-node/gen/gen_getTransactionStatus; checked 2026-09-05 UTC
 
 The Studio and frontend scopes are measured separately. Studio evidence is inherited from the approved deployed package because this release batch does not change contract bytes, ABI, address, network, or Studio transactions. The exact Vercel production URL is deployed and serves the frontend; browser transaction measurements remain pending the controlled E2E run.
