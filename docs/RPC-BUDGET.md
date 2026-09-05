@@ -57,6 +57,6 @@ FRONTEND_SCOPE: APPLICABLE
 - The coordinator emits `WAITING_FOR_WALLET`, `SUBMITTED`, `WAITING_FOR_FINALITY`, `VERIFYING_EXECUTION`, `VERIFYING_READBACK`, and terminal phases from actual promise/lifecycle outcomes.
 - A valid hash is persisted before verification; readback uncertainty becomes `RECONCILIATION_REQUIRED`, and no automatic write retry exists.
 - Local rendered review verified the disconnected initial state, no visible technical leakage, complete DOM hooks, desktop layout, 360px layout without horizontal overflow, and zero console warnings/errors.
-- Vercel deployment: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app), deployment `dpl_7d7mw2Q4Db9jWkZ7Jq6Micrm1rTR`, `READY`, HTTP 200 for the application entrypoint. Browser request counts, wallet path, transaction hashes, finality, readback, and bounded defect-sweep evidence remain pending the controlled E2E run and must be added before `POST_GITHUB_VERCEL_FINAL`.
+- Vercel production: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app), `READY`, HTTP 200 for the application entrypoint from the `frontend/` static root. Browser request counts, wallet path, transaction hashes, finality, readback, and bounded defect-sweep evidence remain pending the controlled E2E run and must be added before `POST_GITHUB_VERCEL_FINAL`.
 - FRONTEND_MATRIX_STATUS: COMPLETE
 - FRONTEND_EVIDENCE_STATUS: PENDING_VERCEL_EXACT_RELEASE
