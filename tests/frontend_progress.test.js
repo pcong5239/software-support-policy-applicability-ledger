@@ -23,6 +23,8 @@ assert.match(css, /prefers-reduced-motion/);
 assert.match(app, /waitForFinalization/);
 assert.match(app, /isSuccessful\(transaction\)/);
 assert.match(app, /execution_result === "SUCCESS"/);
+assert.match(app, /transaction\?\.consensus_data\?\.leader_receipt/);
+assert.match(app, /receipts\.some\(\(receipt\) => receipt\?\.execution_result === "SUCCESS"\)/);
 assert.match(app, /localStorage/);
 assert.match(app, /Continue verification|RECONCILIATION_REQUIRED/);
 assert.match(app, /transactionInFlight \|\| pendingTransaction\(\)/);
