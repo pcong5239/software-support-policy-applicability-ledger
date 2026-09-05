@@ -5,9 +5,11 @@
   "contract": "0x97375A261D51ec8B90D4DE44eD5Ea4711a598355",
   "supersedes_case": "live-20260901-01",
   "replacement_authorization": "User authorized a fresh matrix in the primary task on 2026-09-01.",
-  "frontend_e2e_checked_at_utc": "2026-09-05T17:04:37.312Z",
-  "frontend_e2e_deployment": "dpl_56S4bbjwbQa4Qu21jyCewUFd32x9",
-  "frontend_e2e_case_id": "e2e-20260905-03ae2fb",
+  "frontend_e2e_checked_at_utc": "2026-09-05T17:38:48.483Z",
+  "frontend_e2e_deployment": "dpl_5UbN4mNaV2XrucSnXaTzQLGcoP9Z",
+  "frontend_e2e_deployment_url": "https://software-support-policy-applicability-ledger-iiavxdlr7-pcong.vercel.app",
+  "frontend_e2e_source_revision": "cd8407a13307d549fbd5d6ef04f300fa2a097591",
+  "frontend_e2e_case_id": "e2e-rpc-20260905-cd8407a",
   "latest_canonical_recheck_utc": "2026-09-01T03:36:21.0314205Z",
   "receipts": [
     {
@@ -58,30 +60,61 @@
   "frontend_e2e_receipts": [
     {
       "case": "E2E-01 register_case",
-      "hash": "0x19fa2cff93641e4988d3cb626d9d0fba93a2742bdbc109114854d352fecfa36d",
+      "hash": "0xed16226651f19cfae4e5633b641bd0f2d7535f54c568fced5f58d5acdefe1004",
       "status": "FINALIZED",
       "result_name": "MAJORITY_AGREE",
       "execution_result": "SUCCESS",
       "receipt_status": "0x1",
-      "receipt_transaction_hash_matches": true
+      "receipt_transaction_hash_matches": true,
+      "http_rpc_counts": {
+        "eth_getTransactionCount": 1,
+        "eth_estimateGas": 1,
+        "eth_gasPrice": 1,
+        "eth_getTransactionByHash": 11,
+        "gen_call": 1
+      },
+      "status_intervals_ms": {"count": 10, "min": 3482, "max": 3873}
     },
     {
       "case": "E2E-02 freeze_case",
-      "hash": "0x63049d946b36418d66effb6fd80b07afbf88d91eb6f0a95e740c829f0660d84f",
+      "hash": "0x55c7a6251ef57c5292f0a02592a45d0fdb4833365ddb8e433516b669daceef8f",
       "status": "FINALIZED",
       "result_name": "MAJORITY_AGREE",
       "execution_result": "SUCCESS",
       "receipt_status": "0x1",
-      "receipt_transaction_hash_matches": true
+      "receipt_transaction_hash_matches": true,
+      "http_rpc_counts": {
+        "eth_getTransactionCount": 1,
+        "eth_estimateGas": 1,
+        "eth_gasPrice": 1,
+        "eth_getTransactionByHash": 11,
+        "gen_call": 1
+      },
+      "status_intervals_ms": {"count": 10, "min": 3479, "max": 3925}
     },
     {
       "case": "E2E-03 assess",
-      "hash": "0x08218b0a57b65993c8ea212d668f83ec93ff4856e2d1fdf1f2ce50edeeefa8d6",
+      "hash": "0xe77e0ebe1c0518eafe08057caa6e2e36e00bfe4d5842cdf5234b5d593ffdf157",
       "status": "FINALIZED",
       "result_name": "MAJORITY_AGREE",
       "execution_result": "SUCCESS",
       "receipt_status": "0x1",
-      "receipt_transaction_hash_matches": true
+      "receipt_transaction_hash_matches": true,
+      "http_rpc_counts": {
+        "eth_getTransactionCount": 1,
+        "eth_estimateGas": 1,
+        "eth_gasPrice": 1,
+        "eth_getTransactionByHash": 11,
+        "gen_call": 1
+      },
+      "status_intervals_ms": {"count": 10, "min": 3723, "max": 3894}
     }
-  ]
+  ],
+  "frontend_rpc_capture": {
+    "mode": "evidence-query-only",
+    "initial_load_genlayer_http_requests": 0,
+    "explicit_reload_readback_gen_call": 1,
+    "provider_extension_capture": "not-captured-non-writable-request-method",
+    "payloads_recorded": false
+  }
 }
