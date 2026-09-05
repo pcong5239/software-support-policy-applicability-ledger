@@ -77,7 +77,10 @@ function userFacingError(error, context = "request") {
 function setBusy(button, busy, label) { button.disabled = busy; if (busy) { button.dataset.label = button.textContent; button.textContent = label; } else if (button.dataset.label) { button.textContent = button.dataset.label; } }
 function isHash(value) { return /^0x[0-9a-fA-F]{64}$/.test(String(value || "")); }
 function isUserRejection(error) { return error?.code === 4001 || error?.cause?.code === 4001 || /rejected|denied|cancelled|canceled/i.test(String(error?.message || error)); }
-function isSuccessful(transaction) { return transaction?.statusName === "FINALIZED" && transaction?.txExecutionResultName === "FINISHED_WITH_RETURN"; }
+function isSuccessful(transaction) {
+  if (transaction?.statusName !== "FINALIZED") return false;
+  return transaction?.txExecutionResultName === "FINISHED_WITH_RETURN" || transaction?.execution_result === "SUCCESS";
+}
 function pendingTransaction() {
   try {
     const value = JSON.parse(localStorage.getItem(PENDING_STORAGE_KEY) || "null");
