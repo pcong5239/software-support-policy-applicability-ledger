@@ -43,7 +43,7 @@ FRONTEND_SCOPE: APPLICABLE
 |---|---|---:|---|---|---:|
 | Initial load | One account-free `createClient` and provider discovery | 1 client setup; 0 contract reads | None | No stale cache | 0 |
 | Wallet discovery | Page-lifetime announcements plus one bounded legacy scan when chooser opens | 0 account requests; 0 contract reads | One 350 ms discovery window; no retry loop | Dedupe by wallet and provider identity | 0 |
-| Wallet connection | Explicit wallet-option click | 1 account request; up to 2 `wallet_switchEthereumChain` calls; up to 1 `wallet_addEthereumChain` only after `4902`; 1 `eth_chainId` validation | One switch retry only after successful add; no automatic retry for other errors | Atomically reset session/case context on account, chain or disconnect | 0 |
+| Wallet connection | Explicit wallet-option click | 1 `eth_requestAccounts`; 1 `eth_accounts` confirmation; up to 2 `wallet_switchEthereumChain` calls; up to 1 `wallet_addEthereumChain` only after `4902`; 1 `eth_chainId` validation | One switch retry only after successful add; no automatic retry for other errors | Atomically reset session/case context on account, chain or disconnect | 0 |
 | Register / freeze / assess | One selected-provider `writeContract` | 1 write; one bounded lifecycle wait; one readback | No automatic resubmission | Persist hash; invalidate case context after write | 1 each |
 | Finality and execution | `waitForFinalization({ hash })` when available, compatibility receipt helper otherwise | One bounded wait; terminal receipt only | Stop at finality/error | Retain hash through uncertainty | 0 |
 | Readback | Shared `readClient.readContract(get_case)` | 1 deliberate post-write read | No polling loop | No cache for verdict state | 0 |

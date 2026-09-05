@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/genlayer-js@1.1.8";
 import { studionet } from "https://esm.sh/genlayer-js@1.1.8/chains";
 import { DEFAULT_CONFIG, EXPLORERS } from "./config.js";
-import { createProviderRegistry, createProviderSessionEffects, isCallableProvider } from "./wallet-session.js";
+import { createProviderRegistry, createProviderSessionEffects, createWalletStore, getWalletState, isCallableProvider, selectWalletView, subscribeWalletState } from "./wallet-session.js";
 
 const CHAINS = { studionet };
 const SUPPORTED_WALLETS = Object.freeze({ metamask: "MetaMask", okx: "OKX Wallet", rabby: "Rabby" });
@@ -23,11 +23,12 @@ const TRANSACTION_COPY = Object.freeze({
 const PENDING_PHASES = new Set(["WAITING_FOR_WALLET", "SUBMITTED", "WAITING_FOR_FINALITY", "VERIFYING_EXECUTION", "VERIFYING_READBACK"]);
 const PENDING_STORAGE_KEY = "support-policy-ledger.pending.v1";
 let transactionInFlight = false;
+const walletStore = createWalletStore();
 const state = {
   network: DEFAULT_CONFIG.network,
   contractAddress: DEFAULT_CONFIG.contractAddress,
   readClient: null,
-  wallet: Object.freeze({ phase: WALLET_PHASES.DISCONNECTED, providers: [], selected: null, account: null, writeClient: null, error: "" }),
+  wallet: getWalletState(walletStore),
   lastCaseId: "",
 };
 const providerRegistry = createProviderRegistry();
@@ -133,8 +134,7 @@ function validAnnouncement(detail) {
   return Boolean(isCallableProvider(detail?.provider) && detail?.info?.uuid && detail?.info?.name && detail?.info?.rdns && /^data:image\//i.test(detail?.info?.icon || "") && supportedBrand(detail.info));
 }
 function commitWallet(patch) {
-  state.wallet = Object.freeze({ ...state.wallet, ...patch });
-  renderWallet();
+  walletStore.commit(patch);
 }
 function addProvider(entry) {
   commitWallet({ providers: providerRegistry.upsert(entry) });
@@ -198,8 +198,9 @@ async function connectWallet(selected) {
     assertReady();
     if (!selected?.provider) throw new Error("Choose an available wallet first.");
     commitWallet({ phase: WALLET_PHASES.CONNECTING, selected, error: "" });
-    const accounts = await selected.provider.request({ method: "eth_requestAccounts" });
+    await selected.provider.request({ method: "eth_requestAccounts" });
     if (!sessionEffects.isCurrent(sessionToken)) return;
+    const accounts = await selected.provider.request({ method: "eth_accounts" });
     if (!accounts?.[0]) throw new Error("The wallet returned no account.");
     await ensureSelectedChain(selected.provider);
     if (!sessionEffects.isCurrent(sessionToken)) return;
@@ -215,10 +216,11 @@ async function connectWallet(selected) {
 }
 function disconnectWallet(message = "Wallet disconnected.") { sessionEffects.invalidate(); commitWallet({ phase: WALLET_PHASES.DISCONNECTED, selected: null, account: null, writeClient: null, error: "" }); resetCaseContext(); showNotice(message); }
 function renderWallet() {
-  const wallet = state.wallet; const connected = wallet.phase === WALLET_PHASES.CONNECTED;
+  const wallet = getWalletState(walletStore); const walletView = selectWalletView(wallet); const connected = walletView.connected;
+  state.wallet = wallet;
   elements.connection.textContent = connected ? "Wallet ready" : wallet.phase === WALLET_PHASES.WRONG_CHAIN ? "Network switch required" : wallet.phase === WALLET_PHASES.CONNECTING ? "Connecting" : "Setup required";
   elements.account.textContent = connected ? `${SUPPORTED_WALLETS[wallet.selected.brand]} · ${short(wallet.account)}` : wallet.phase === WALLET_PHASES.WRONG_CHAIN ? "Wrong network" : "Not connected";
-  elements.connect.textContent = connected ? "Disconnect" : wallet.selected ? "Switch wallet" : "Connect wallet";
+  elements.connect.textContent = walletView.primaryAction;
   elements.networkLabel.textContent = networkLabel(state.network);
   elements.networkLabel.parentElement.querySelector(".dot").style.color = connected ? "var(--color-accent)" : "var(--color-ink-faint)";
   elements.walletError.textContent = wallet.error; elements.walletError.classList.toggle("hidden", !wallet.error);
@@ -335,6 +337,7 @@ function resetCaseContext() {
 function updateButtons() { const ready = configured() && state.wallet.phase === WALLET_PHASES.CONNECTED && Boolean(state.wallet.writeClient); const locked = transactionInFlight || Boolean(pendingTransaction()); elements.connect.disabled = !configured() || transactionInFlight; elements.freeze.disabled = locked || !ready || !state.lastCaseId; elements.assess.disabled = locked || !ready || !state.lastCaseId; }
 
 elements.network.value = state.network; elements.address.value = state.contractAddress; elements.observedDate.value = new Date().toISOString().slice(0, 10);
+subscribeWalletState(walletStore, () => { state.wallet = getWalletState(walletStore); renderWallet(); });
 elements.network.addEventListener("change", () => { state.network = elements.network.value; disconnectWallet("Network changed. Connect your wallet again."); clients(); });
 elements.address.addEventListener("input", () => { state.contractAddress = elements.address.value.trim(); resetCaseContext(); updateButtons(); });
 elements.connect.addEventListener("click", openWalletChooser); elements.walletClose.addEventListener("click", closeWalletChooser); elements.walletCancel.addEventListener("click", closeWalletChooser); elements.walletDialog.addEventListener("cancel", (event) => { event.preventDefault(); closeWalletChooser(); });

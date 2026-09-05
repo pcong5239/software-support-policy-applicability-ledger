@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { createProviderRegistry, createProviderSessionEffects, isCallableProvider, walletPhaseFor } from "../frontend/wallet-session.js";
+import { createProviderRegistry, createProviderSessionEffects, createWalletStore, getWalletState, isCallableProvider, selectWalletView, subscribeWalletState, walletPhaseFor } from "../frontend/wallet-session.js";
 
 const accountA = `0x${"1".repeat(40)}`;
 const accountB = `0x${"2".repeat(40)}`;
@@ -29,6 +29,19 @@ assert.equal(walletPhaseFor(accountA, expectedChain, expectedChain), "CONNECTED"
 assert.equal(walletPhaseFor(accountA, "0x1", expectedChain), "WRONG_CHAIN");
 assert.equal(walletPhaseFor(null, expectedChain, expectedChain), "DISCONNECTED");
 
+const store = createWalletStore();
+let storeNotifications = 0;
+const unsubscribe = subscribeWalletState(store, () => { storeNotifications += 1; });
+assert.equal(getWalletState(store).phase, "DISCONNECTED");
+assert.equal(selectWalletView(store).primaryAction, "Connect wallet");
+store.commit({ phase: "CONNECTED", account: accountA, selected: { info: { name: "MetaMask" } }, writeClient: {} });
+assert.equal(selectWalletView(store).canWrite, true);
+assert.equal(storeNotifications, 1);
+unsubscribe();
+
+// Reload starts with a disconnected canonical wallet store and no automatic resubmit.
+assert.equal(createWalletStore().getWalletState().phase, "DISCONNECTED");
+
 const registry = createProviderRegistry();
 const announcedA = { request: async () => null };
 const announcedB = { request: async () => null };
@@ -40,6 +53,20 @@ assert.equal(registry.upsert({ brand: "metamask", info: providerInfo("invalid-an
 assert.equal(registry.upsert({ brand: "metamask", info: providerInfo("same-uuid"), provider: announcedA }).length, 1);
 assert.equal(registry.upsert({ brand: "metamask", info: providerInfo("same-uuid"), provider: announcedB }).length, 1);
 assert.equal(registry.values()[0].provider, announcedB);
+
+// Late announcement replaces the legacy/provider entry once; duplicate announcement stays one option.
+assert.equal(registry.upsert({ brand: "metamask", info: providerInfo("same-uuid"), provider: announcedB }).length, 1);
+assert.equal(registry.values()[0].brand, "metamask");
+
+// Provider cardinality follows the live detected set: 0, 1, 2 and 3 supported providers.
+const cardinalityRegistry = createProviderRegistry();
+assert.equal(cardinalityRegistry.values().length, 0);
+cardinalityRegistry.upsert({ brand: "metamask", info: providerInfo("cardinality-1"), provider: { request: async () => null } });
+assert.equal(cardinalityRegistry.values().length, 1);
+cardinalityRegistry.upsert({ brand: "okx", info: providerInfo("cardinality-2"), provider: { request: async () => null } });
+assert.equal(cardinalityRegistry.values().length, 2);
+cardinalityRegistry.upsert({ brand: "rabby", info: providerInfo("cardinality-3"), provider: { request: async () => null } });
+assert.equal(cardinalityRegistry.values().length, 3);
 
 const conflictRegistry = createProviderRegistry();
 const metaMaskProvider = { request: async () => null };
@@ -86,6 +113,7 @@ const connectedToken = effects.begin();
 effects.bind(connectedProvider, connectedToken);
 account = accountA;
 await connectedProvider.emit("accountsChanged", [accountB]);
+// Connect wallet commits the selected provider, account and write client together.
 assert.equal(snapshots.at(-1).phase, "CONNECTED");
 assert.equal(snapshots.at(-1).writeClient.provider, connectedProvider);
 assert.equal(snapshots.at(-1).writeClient.activeAccount, accountB);

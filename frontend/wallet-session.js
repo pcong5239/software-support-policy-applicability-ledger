@@ -1,3 +1,62 @@
+export const WALLET_SESSION_STATE_MACHINE = true;
+
+const DEFAULT_WALLET_STATE = Object.freeze({
+  phase: "DISCONNECTED",
+  providers: [],
+  selected: null,
+  account: null,
+  writeClient: null,
+  error: "",
+});
+
+export function createWalletStore(initialState = {}) {
+  let state = Object.freeze({ ...DEFAULT_WALLET_STATE, ...initialState });
+  const listeners = new Set();
+
+  return Object.freeze({
+    getWalletState: () => state,
+    subscribeWalletState(listener) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+    commit(patch) {
+      state = Object.freeze({ ...state, ...patch });
+      listeners.forEach((listener) => listener(state));
+      return state;
+    },
+  });
+}
+
+export function getWalletState(storeOrState) {
+  return typeof storeOrState?.getWalletState === "function"
+    ? storeOrState.getWalletState()
+    : storeOrState?.wallet || storeOrState;
+}
+
+export function subscribeWalletState(store, listener) {
+  return typeof store?.subscribeWalletState === "function"
+    ? store.subscribeWalletState(listener)
+    : () => {};
+}
+
+export function selectWalletView(storeOrState) {
+  const wallet = getWalletState(storeOrState) || DEFAULT_WALLET_STATE;
+  const connected = wallet.phase === "CONNECTED";
+  const name = wallet.selected?.info?.name;
+  const address = wallet.account;
+  return Object.freeze({
+    connected,
+    chooserOpen: ["CHOOSER_OPEN", "CONNECTING", "ERROR"].includes(wallet.phase),
+    providerOptions: wallet.providers,
+    badge: connected && name && address
+      ? `${name} · ${address.slice(0, 6)}…${address.slice(-4)}`
+      : wallet.phase === "WRONG_CHAIN" ? "Wrong network" : "Disconnected",
+    primaryAction: connected ? "Disconnect" : wallet.phase === "WRONG_CHAIN" ? "Switch wallet" : "Connect wallet",
+    canWrite: connected && Boolean(wallet.writeClient),
+    error: wallet.error,
+  });
+}
+
 export const walletPhaseFor = (account, chainId, expectedChainId) => {
   if (!account) return "DISCONNECTED";
   return String(chainId || "").toLowerCase() === String(expectedChainId || "").toLowerCase() ? "CONNECTED" : "WRONG_CHAIN";
