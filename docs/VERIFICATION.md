@@ -10,7 +10,8 @@
 - Vercel project: `pcong/software-support-policy-applicability-ledger`
 - Vercel production URL: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app)
 - Vercel exact candidate deployment: `READY`, deployment ID `dpl_5UbN4mNaV2XrucSnXaTzQLGcoP9Z`, serving the `frontend/` static root at the stable production alias; exact deployment URL `https://software-support-policy-applicability-ledger-iiavxdlr7-pcong.vercel.app`.
-- GitHub commit: [`886f7f212b642c321e1bcfa7a0c6997a7fab2ab5`](https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/886f7f212b642c321e1bcfa7a0c6997a7fab2ab5)
+- Current final package commit: [`d4737f76d935fd86fccd2307f3dac1163bf9cb2b`](https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/d4737f76d935fd86fccd2307f3dac1163bf9cb2b)
+- Prior source-release parent: [`886f7f212b642c321e1bcfa7a0c6997a7fab2ab5`](https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/886f7f212b642c321e1bcfa7a0c6997a7fab2ab5). The current package is documentation-only and preserves the exact frontend, contract, deployment and live evidence identities below.
 
 ## Local checks
 
@@ -61,7 +62,7 @@ Validity gate: `PASS`
 ### Engineering — 4/5
 
 - Evidence-backed reason: the repository has incremental history, reproducible commands, 21 passing tests, source/deployment parity, bounded RPC records, finalized receipts and a public verification package.
-- Exact evidence inspected: GitHub commit `886f7f212b642c321e1bcfa7a0c6997a7fab2ab5`; `README.md`; `docs/VERIFICATION.md`; `docs/RPC-BUDGET.md`; canonical release audit output; `tests/` and `verification/`.
+- Exact evidence inspected: current final package commit `d4737f76d935fd86fccd2307f3dac1163bf9cb2b`; prior source-release parent `886f7f212b642c321e1bcfa7a0c6997a7fab2ab5`; `README.md`; `docs/VERIFICATION.md`; `docs/RPC-BUDGET.md`; canonical release audit output; `tests/` and `verification/`.
 - Remaining weakness: the pinned compatibility runtime emits an informational newer-runner warning and the local runner uses defaults because `gltest.config.yaml` is absent; both facts are documented and do not weaken the live proof.
 
 ### Frontend / UX — 4/5

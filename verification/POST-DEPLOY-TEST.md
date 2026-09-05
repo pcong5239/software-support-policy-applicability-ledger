@@ -22,7 +22,8 @@ The frontend provider-count limitation is separately recorded under a user-appro
 - Studio account/role: `0x34b92E6553eaCA11A00A9d86d75d8a7881779D78` / `deployer`
 - Deployment status/result: `FINALIZED` / `SUCCESS`; execution mode `NORMAL`.
 - Frontend deployment configuration: `frontend/config.js` points to this exact contract address.
-- GitHub release: `https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/886f7f212b642c321e1bcfa7a0c6997a7fab2ab5`
+- GitHub final package: `https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/d4737f76d935fd86fccd2307f3dac1163bf9cb2b`
+- Prior source-release parent: `https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/886f7f212b642c321e1bcfa7a0c6997a7fab2ab5`; this package correction is documentation-only and preserves the exact frontend, contract, deployment and live evidence identities.
 - Vercel project: `pcong/software-support-policy-applicability-ledger`
 - Vercel production URL: `https://software-support-policy-applicability-ledger-pcong.vercel.app`
 - Vercel serving root: `frontend/`; production entrypoint returned HTTP 200 and the expected application title.
