@@ -84,7 +84,8 @@ function hasSuccessfulExecution(transaction) {
   return receipts.some((receipt) => receipt?.execution_result === "SUCCESS");
 }
 function isSuccessful(transaction) {
-  if (transaction?.statusName !== "FINALIZED") return false;
+  const statusName = transaction?.statusName || transaction?.status_name;
+  if (statusName !== "FINALIZED") return false;
   return hasSuccessfulExecution(transaction);
 }
 function pendingTransaction() {
