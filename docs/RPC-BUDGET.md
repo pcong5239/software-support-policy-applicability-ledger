@@ -75,6 +75,19 @@ The counts above are primary-AI Studio action-ledger counts from the retained ex
 
 FRONTEND_SCOPE: APPLICABLE
 
+## FRONTEND EVIDENCE-PLAN ADJUSTMENT
+
+FRONTEND_EVIDENCE_PLAN_ADJUSTMENT_STATUS: REQUESTED_ANONYMOUS_REVIEW
+FRONTEND_PROVIDER_MEASUREMENT_STATUS: NOT_OBSERVABLE_ON_EXACT_RELEASE
+FRONTEND_PROVIDER_MEASUREMENT_SCOPE: `eth_requestAccounts`, `eth_accounts`, `eth_chainId`, and any `wallet_switchEthereumChain`/`wallet_addEthereumChain` call actually invoked
+FRONTEND_PROVIDER_MEASUREMENT_SOURCE: Exact Vercel page observer plus retained Chrome capability probe; provider request property was non-writable and Chrome exposed no Network/CDP/performance request stream
+FRONTEND_ALTERNATIVE_EVIDENCE: Exact-release page HTTP RPC counts and lifecycle markers; exact-release wallet journey/readback; executable wallet-session call-path and state-machine regressions; explicit provider limitation and no inferred physical counts
+FRONTEND_ADJUSTMENT_NO_REPLAY: YES
+FRONTEND_ADJUSTMENT_NO_REDEPLOY: YES
+FRONTEND_ADJUSTMENT_APPROVAL: PENDING SAME ANONYMOUS POST_DEPLOY_TEST REVIEW
+
+This is a proposed evidence-plan adjustment for the reviewer to decide under the current frontend RPC gate. It does not convert executable tests into exact-release physical counts and does not claim the provider calls were observed.
+
 ### FRONTEND RPC BUDGET MATRIX
 
 | Screen/workflow | Request source | Planned maximum | Polling/retry | Cache/invalidation | Expected transactions |

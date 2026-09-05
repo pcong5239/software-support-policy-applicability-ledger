@@ -8,6 +8,8 @@ The previously unverifiable `PD-01` remains superseded by `PD-01R`. The Studio c
 
 Studio evidence mode is locked as `OBSERVABLE_ACTION_LEDGER` with retrospective timing. The retained Studio trace records five transaction-producing actions, five transactions, ten bounded status checkpoints, five terminal receipt observations, seven authoritative readbacks, zero retries and zero duplicate transactions. Physical Studio request counts are unavailable and are not claimed; the complete ledger is in `docs/RPC-BUDGET.md` and the machine-readable receipt package.
 
+The frontend provider-count limitation is separately recorded as a proposed evidence-plan adjustment pending same-reviewer decision. The exact release has page HTTP RPC counts, lifecycle/readback evidence and executable provider-call-path regressions, but no inferred physical provider count. No write replay or redeployment is proposed for this measurement gap.
+
 ## Identity and deployment
 
 - Project: Software Support Policy Applicability Ledger

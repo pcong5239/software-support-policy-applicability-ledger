@@ -140,5 +140,15 @@
     "explicit_reload_readback_gen_call": 1,
     "provider_extension_capture": "not-captured-non-writable-request-method",
     "payloads_recorded": false
+  },
+  "frontend_evidence_plan_adjustment": {
+    "status": "REQUESTED_ANONYMOUS_REVIEW",
+    "provider_measurement_status": "NOT_OBSERVABLE_ON_EXACT_RELEASE",
+    "provider_measurement_scope": ["eth_requestAccounts", "eth_accounts", "eth_chainId", "wallet_switchEthereumChain", "wallet_addEthereumChain"],
+    "source": "Exact Vercel page observer plus retained Chrome capability probe; provider request property was non-writable and Chrome exposed no Network/CDP/performance request stream",
+    "alternative_evidence": "Exact-release page HTTP RPC counts and lifecycle markers; exact-release wallet journey/readback; executable wallet-session call-path and state-machine regressions; explicit provider limitation and no inferred physical counts",
+    "no_replay": true,
+    "no_redeploy": true,
+    "approval": "PENDING SAME ANONYMOUS POST_DEPLOY_TEST REVIEW"
   }
 }
