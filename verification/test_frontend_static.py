@@ -13,7 +13,7 @@ def test_frontend_has_explicit_wallet_and_finality_boundaries():
     assert 'eip6963:announceProvider' in app
     assert 'eip6963:requestProvider' in app
     assert 'No EIP-6963 provider found' not in app
-    assert 'No supported wallet detected' in app
+    assert 'No supported wallet was detected' in html
     assert 'MetaMask' in app and 'OKX Wallet' in app and 'Rabby' in app
     assert 'status: "FINALIZED"' in app
     assert 'FINISHED_WITH_RETURN' in app
@@ -28,6 +28,26 @@ def test_frontend_has_explicit_wallet_and_finality_boundaries():
     assert 'tx-hash' in html and 'tx-link' in html and 'copy-tx' in html
     assert "innerHTML" not in app
     assert 'rel="noreferrer noopener"' in html
+
+
+def test_wallet_chooser_uses_one_state_and_explicit_user_selection():
+    app = (ROOT / "frontend" / "app.js").read_text(encoding="utf-8")
+    html = (ROOT / "frontend" / "index.html").read_text(encoding="utf-8")
+
+    for phase in ("DISCONNECTED", "DISCOVERING", "CHOOSER_OPEN", "CONNECTING", "CONNECTED", "WRONG_CHAIN", "ERROR"):
+        assert phase in app
+    assert '<dialog id="wallet-dialog"' in html
+    assert '<select id="provider-select"' not in html
+    assert app.count('eth_requestAccounts') == 1
+    assert 'button.addEventListener("click", () => connectWallet(entry))' in app
+    assert 'wallet_switchEthereumChain' in app
+    assert 'wallet_addEthereumChain' in app
+    assert 'error?.code !== 4902' in app
+    assert 'provider.removeListener?.("accountsChanged"' in app
+    assert 'provider.removeListener?.("chainChanged"' in app
+    assert 'provider.removeListener?.("disconnect"' in app
+    assert 'window.addEventListener("eip6963:announceProvider"' in app
+    assert 'window.addEventListener("load"' not in app
 
 
 def test_frontend_transaction_progress_is_explicit_and_reconciles_without_duplicates():

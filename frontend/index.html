@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Software Support Policy Applicability Ledger — Verified, consensus-backed software support decisions on GenLayer." />
     <title>Software Support Policy Applicability Ledger</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./tokens.css" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -12,7 +16,7 @@
 
     <header class="topbar">
       <div class="topbar-inner">
-        <a class="wordmark" href="./" aria-label="Software Support Policy Applicability Ledger Home">
+        <a class="wordmark" href="./" aria-label="Software Support Policy Applicability Ledger home">
           <svg class="brand-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
             <rect x="2" y="2" width="24" height="24" rx="6" class="brand-bg" />
             <path d="M7 8.5H21M7 14H16M7 19.5H13" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" />
@@ -22,11 +26,19 @@
           <span class="brand-title">Support Policy <span class="brand-accent">Ledger</span></span>
         </a>
 
-        <div class="topbar-meta">
+        <div class="topbar-actions">
           <div class="network-pill" aria-live="polite">
             <span class="dot" aria-hidden="true"></span>
             <span class="network-prefix">Network:</span>
             <span id="network-label">Not connected</span>
+          </div>
+
+          <div class="wallet-controls">
+            <button id="connect-button" class="button primary button-sm" type="button">Connect wallet</button>
+            <div class="account-badge">
+              <span class="account-badge-dot" aria-hidden="true"></span>
+              <span id="account-label" class="muted">Not connected</span>
+            </div>
           </div>
         </div>
       </div>
@@ -51,7 +63,7 @@
           <div class="trust-divider" aria-hidden="true">/</div>
           <div class="trust-item">
             <span class="trust-icon" aria-hidden="true">◷</span>
-            <span>Deterministic Policy Assessment</span>
+            <span>Consensus Policy Assessment</span>
           </div>
           <div class="trust-divider" aria-hidden="true">/</div>
           <div class="trust-item">
@@ -66,15 +78,19 @@
           <p class="eyebrow">How it works</p>
           <h2 id="how-it-works-title">From release facts to a verified support decision</h2>
         </div>
-        <p>Enter the release coordinates, lock the case, assess the publisher policy for a date, then review the stored decision and evidence digest.</p>
+        <ol class="how-it-works-steps">
+          <li>Connect a supported wallet and confirm the deployed ledger.</li>
+          <li>Register the exact product, release, region, and publisher policy URL.</li>
+          <li>Freeze the case, assess it for an observation date, and verify the stored result.</li>
+        </ol>
       </section>
 
       <!-- Step 01: Setup & Connection -->
       <section class="setup card" aria-labelledby="setup-title">
         <div class="section-heading">
           <div class="heading-group">
-            <p class="eyebrow">Step 01 / Connection</p>
-            <h2 id="setup-title">Network &amp; Wallet</h2>
+            <p class="eyebrow">Step 01 / Target Deployment</p>
+            <h2 id="setup-title">Target Network &amp; Contract</h2>
           </div>
           <span id="connection-state" class="state-chip" aria-live="polite">Setup required</span>
         </div>
@@ -87,31 +103,13 @@
                 <option value="studionet">Studionet</option>
               </select>
             </div>
-            <span id="network-hint" class="field-hint">Select the network for this ledger.</span>
+            <span id="network-hint" class="field-hint">Select the target network for this ledger.</span>
           </div>
 
           <div class="field">
             <label for="contract-address">Contract Address</label>
             <input id="contract-address" class="font-mono" inputmode="text" placeholder="0x…" autocomplete="off" spellcheck="false" aria-describedby="address-hint" />
-            <span id="address-hint" class="field-hint">Contract address for this ledger.</span>
-          </div>
-
-          <div class="field">
-            <label for="provider-select">Wallet</label>
-            <div class="select-wrapper">
-              <select id="provider-select" aria-describedby="provider-hint">
-                <option value="">Discovering providers…</option>
-              </select>
-            </div>
-            <span id="provider-hint" class="field-hint">Choose a wallet to connect.</span>
-          </div>
-        </div>
-
-        <div class="action-row setup-actions">
-          <button id="connect-button" class="button primary" type="button">Connect wallet</button>
-          <div class="account-badge">
-            <span class="account-badge-dot" aria-hidden="true"></span>
-            <span id="account-label" class="muted">No account selected.</span>
+            <span id="address-hint" class="field-hint">Deployed intelligent contract on Studionet.</span>
           </div>
         </div>
       </section>
@@ -125,7 +123,7 @@
               <p class="eyebrow">Step 02 / Register &amp; Freeze</p>
               <h2 id="register-title">Software Release Facts</h2>
             </div>
-            <span class="step-badge" aria-label="Step 2A">2A</span>
+            <span class="step-badge" aria-label="Step 2">2</span>
           </div>
           <p class="helper">
             Registration commits the exact release coordinates. Once verified, freeze the case to permanently lock the evidence before assessment.
@@ -169,7 +167,7 @@
             </div>
 
             <div class="action-row wide">
-              <button class="button primary" type="submit">Register case</button>
+              <button class="button primary" id="register-button" type="submit">Register case</button>
               <button class="button secondary" id="freeze-button" type="button" disabled>Freeze case</button>
             </div>
           </form>
@@ -182,7 +180,7 @@
               <p class="eyebrow">Step 03 / Evaluate</p>
               <h2 id="assess-title">Policy Applicability</h2>
             </div>
-            <span class="step-badge" aria-label="Step 2B">2B</span>
+            <span class="step-badge" aria-label="Step 3">3</span>
           </div>
           <p class="helper">
             The intelligent contract retrieves the publisher policy as untrusted evidence, derives the support window deterministically, and records consensus.
@@ -219,7 +217,7 @@
         <div class="section-heading">
           <div class="heading-group">
             <p class="eyebrow">Step 04 / Readback</p>
-          <h2 id="readback-title">Verified Ledger State</h2>
+            <h2 id="readback-title">Verified Ledger State</h2>
           </div>
           <button id="refresh-button" class="button text-button" type="button">
             <span>Refresh state</span>
@@ -279,8 +277,8 @@
           </div>
         </div>
 
-      <!-- prefers-reduced-motion: progress remains readable without animation. -->
-      <section id="tx-evidence" class="tx-evidence transaction-progress hidden" data-transaction-phase="IDLE" role="status" aria-live="polite" aria-atomic="true">
+        <!-- prefers-reduced-motion: progress remains readable without animation. -->
+        <section id="tx-evidence" class="tx-evidence transaction-progress hidden" data-transaction-phase="IDLE" role="status" aria-live="polite" aria-atomic="true">
           <div class="tx-header">
             <div class="transaction-progress-heading">
               <span id="transaction-spinner" class="transaction-progress-spinner hidden" aria-hidden="true"></span>
@@ -307,11 +305,31 @@
       </section>
 
       <!-- Live system notice -->
-      <section class="notice" id="notice" role="status">
+      <section class="notice" id="notice" role="status" aria-live="polite">
         <span class="notice-mark" aria-hidden="true">i</span>
         <span id="notice-text">Enter a deployed contract address to begin.</span>
       </section>
     </main>
+
+    <dialog id="wallet-dialog" class="wallet-dialog" aria-labelledby="wallet-dialog-title" aria-describedby="wallet-dialog-description">
+      <div class="wallet-dialog-header">
+        <div>
+          <p class="eyebrow">Wallet connection</p>
+          <h2 id="wallet-dialog-title">Choose a wallet</h2>
+        </div>
+        <button id="wallet-dialog-close" class="wallet-dialog-close" type="button" aria-label="Close wallet chooser">×</button>
+      </div>
+      <p id="wallet-dialog-description" class="wallet-dialog-description">Select one of the wallets available in this browser.</p>
+      <div id="provider-select" class="wallet-options" role="list"></div>
+      <div id="wallet-empty" class="wallet-empty hidden">
+        <p>No supported wallet was detected.</p>
+        <p>Install or enable a supported wallet, then try again.</p>
+      </div>
+      <p id="wallet-error" class="wallet-error hidden" role="alert"></p>
+      <div class="wallet-dialog-actions">
+        <button id="wallet-dialog-cancel" class="button secondary" type="button">Cancel</button>
+      </div>
+    </dialog>
 
     <footer class="footer">
       <div class="footer-inner">
