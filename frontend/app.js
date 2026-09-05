@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/genlayer-js@1.1.8";
 import { studionet } from "https://esm.sh/genlayer-js@1.1.8/chains";
 import { DEFAULT_CONFIG, EXPLORERS } from "./config.js";
-import { createSessionGuard, walletPhaseFor } from "./wallet-session.js";
+import { createProviderRegistry, createProviderSessionEffects } from "./wallet-session.js";
 
 const CHAINS = { studionet };
 const SUPPORTED_WALLETS = Object.freeze({ metamask: "MetaMask", okx: "OKX Wallet", rabby: "Rabby" });
@@ -30,10 +30,8 @@ const state = {
   wallet: Object.freeze({ phase: WALLET_PHASES.DISCONNECTED, providers: [], selected: null, account: null, writeClient: null, error: "" }),
   lastCaseId: "",
 };
-const providerByBrand = new Map();
-const brandByProvider = new WeakMap();
+const providerRegistry = createProviderRegistry();
 let removeProviderListeners = () => {};
-const sessionGuard = createSessionGuard();
 
 const $ = (id) => document.getElementById(id);
 const elements = {
@@ -139,13 +137,7 @@ function commitWallet(patch) {
   renderWallet();
 }
 function addProvider(entry) {
-  const existingBrand = brandByProvider.get(entry.provider);
-  if (existingBrand && existingBrand !== entry.brand) providerByBrand.delete(existingBrand);
-  const current = providerByBrand.get(entry.brand);
-  if (current?.info?.uuid === entry.info.uuid || current?.provider === entry.provider) return;
-  providerByBrand.set(entry.brand, entry);
-  brandByProvider.set(entry.provider, entry.brand);
-  commitWallet({ providers: [...providerByBrand.values()] });
+  commitWallet({ providers: providerRegistry.upsert(entry) });
 }
 function announceProvider(event) {
   if (!validAnnouncement(event.detail)) return;
@@ -171,17 +163,25 @@ function renderProviders() {
   elements.walletEmpty.classList.toggle("hidden", Boolean(state.wallet.providers.length));
 }
 async function discoverProviders() {
-  const discoveryToken = sessionGuard.begin();
+  const discoveryToken = sessionEffects.begin();
   commitWallet({ phase: WALLET_PHASES.DISCOVERING, error: "" });
   window.dispatchEvent(new Event("eip6963:requestProvider"));
   await new Promise((resolve) => setTimeout(resolve, 350));
-  if (!sessionGuard.isCurrent(discoveryToken)) return;
+  if (!sessionEffects.isCurrent(discoveryToken)) return;
   const candidates = [...new Set([...(window.ethereum?.providers || []), window.ethereum, window.okxwallet, window.rabby].filter(Boolean))];
-  candidates.forEach((provider) => { const brand = legacyBrand(provider); if (brand && !providerByBrand.has(brand)) addProvider({ brand, info: { name: SUPPORTED_WALLETS[brand], uuid: `legacy-${brand}`, rdns: `legacy.${brand}`, icon: "" }, provider, legacy: true }); });
+  candidates.forEach((provider) => { const brand = legacyBrand(provider); if (brand && !providerRegistry.has(brand)) addProvider({ brand, info: { name: SUPPORTED_WALLETS[brand], uuid: `legacy-${brand}`, rdns: `legacy.${brand}`, icon: "" }, provider, legacy: true }); });
   commitWallet({ phase: WALLET_PHASES.CHOOSER_OPEN });
   renderProviders();
 }
 function expectedChainId() { return `0x${Number(selectedChain().id).toString(16)}`.toLowerCase(); }
+const sessionEffects = createProviderSessionEffects({
+  expectedChainId,
+  getAccount: () => state.wallet.account,
+  createWriteClient: (account, provider) => createClient({ chain: selectedChain(), account, provider }),
+  onSnapshot: commitWallet,
+  onReset: resetCaseContext,
+  onNotice: showNotice,
+});
 async function ensureSelectedChain(provider) {
   try { await provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: expectedChainId() }] }); }
   catch (error) {
@@ -192,58 +192,27 @@ async function ensureSelectedChain(provider) {
   }
 }
 async function connectWallet(selected) {
-  removeProviderListeners();
-  const sessionToken = sessionGuard.begin();
+  const sessionToken = sessionEffects.begin();
   try {
     assertReady();
     if (!selected?.provider) throw new Error("Choose an available wallet first.");
     commitWallet({ phase: WALLET_PHASES.CONNECTING, selected, error: "" });
     const accounts = await selected.provider.request({ method: "eth_requestAccounts" });
-    if (!sessionGuard.isCurrent(sessionToken)) return;
+    if (!sessionEffects.isCurrent(sessionToken)) return;
     if (!accounts?.[0]) throw new Error("The wallet returned no account.");
     await ensureSelectedChain(selected.provider);
-    if (!sessionGuard.isCurrent(sessionToken)) return;
+    if (!sessionEffects.isCurrent(sessionToken)) return;
     const chainId = String(await selected.provider.request({ method: "eth_chainId" })).toLowerCase();
-    if (!sessionGuard.isCurrent(sessionToken)) return;
+    if (!sessionEffects.isCurrent(sessionToken)) return;
     if (chainId !== expectedChainId()) { commitWallet({ phase: WALLET_PHASES.WRONG_CHAIN, selected, account: accounts[0], writeClient: null }); return; }
     const writeClient = createClient({ chain: selectedChain(), account: accounts[0], provider: selected.provider });
-    bindProviderEvents(selected, sessionToken);
+    sessionEffects.bind(selected.provider, sessionToken);
     commitWallet({ phase: WALLET_PHASES.CONNECTED, selected, account: accounts[0], writeClient, error: "" });
     elements.walletDialog.close();
     showNotice("Wallet connected. Register and freeze a case to begin.");
-  } catch (error) { if (!sessionGuard.isCurrent(sessionToken)) return; const message = userFacingError(error, "wallet"); commitWallet({ phase: WALLET_PHASES.ERROR, account: null, writeClient: null, error: message }); showNotice(message, true); }
+  } catch (error) { if (!sessionEffects.isCurrent(sessionToken)) return; sessionEffects.invalidate(); const message = userFacingError(error, "wallet"); commitWallet({ phase: WALLET_PHASES.ERROR, account: null, writeClient: null, error: message }); showNotice(message, true); }
 }
-function bindProviderEvents(selected, sessionToken) {
-  removeProviderListeners();
-  const provider = selected.provider;
-  if (!provider?.on) return;
-  const accountsChanged = async (accounts) => {
-    if (!sessionGuard.isCurrent(sessionToken)) return;
-    const account = accounts?.[0] || null;
-    if (!account) return disconnectWallet("Wallet disconnected. Connect again.");
-    const validatingPhase = state.wallet.phase === WALLET_PHASES.WRONG_CHAIN ? WALLET_PHASES.WRONG_CHAIN : WALLET_PHASES.CONNECTING;
-    commitWallet({ phase: validatingPhase, account, writeClient: null });
-    let chainId;
-    try { chainId = await provider.request({ method: "eth_chainId" }); }
-    catch { if (sessionGuard.isCurrent(sessionToken)) commitWallet({ phase: WALLET_PHASES.WRONG_CHAIN, account, writeClient: null }); return; }
-    if (!sessionGuard.isCurrent(sessionToken)) return;
-    const phase = walletPhaseFor(account, chainId, expectedChainId());
-    commitWallet({ phase, account, writeClient: phase === WALLET_PHASES.CONNECTED ? createClient({ chain: selectedChain(), account, provider }) : null });
-    resetCaseContext();
-    showNotice(phase === WALLET_PHASES.CONNECTED ? "Account changed. Readback context was cleared." : "Account changed while the wallet is on another network.", phase !== WALLET_PHASES.CONNECTED);
-  };
-  const chainChanged = (chainId) => {
-    if (!sessionGuard.isCurrent(sessionToken)) return;
-    const valid = String(chainId).toLowerCase() === expectedChainId();
-    commitWallet({ phase: valid && state.wallet.account ? WALLET_PHASES.CONNECTED : WALLET_PHASES.WRONG_CHAIN, writeClient: valid && state.wallet.account ? createClient({ chain: selectedChain(), account: state.wallet.account, provider }) : null });
-    resetCaseContext();
-    showNotice(valid ? "Network updated. The ledger is ready." : "Switch your wallet to the selected network.", !valid);
-  };
-  const disconnected = () => { if (sessionGuard.isCurrent(sessionToken)) disconnectWallet("Wallet disconnected. Connect again."); };
-  provider.on("accountsChanged", accountsChanged); provider.on("chainChanged", chainChanged); provider.on("disconnect", disconnected);
-  removeProviderListeners = () => { provider.removeListener?.("accountsChanged", accountsChanged); provider.removeListener?.("chainChanged", chainChanged); provider.removeListener?.("disconnect", disconnected); removeProviderListeners = () => {}; };
-}
-function disconnectWallet(message = "Wallet disconnected.") { sessionGuard.invalidate(); removeProviderListeners(); commitWallet({ phase: WALLET_PHASES.DISCONNECTED, selected: null, account: null, writeClient: null, error: "" }); resetCaseContext(); showNotice(message); }
+function disconnectWallet(message = "Wallet disconnected.") { sessionEffects.invalidate(); commitWallet({ phase: WALLET_PHASES.DISCONNECTED, selected: null, account: null, writeClient: null, error: "" }); resetCaseContext(); showNotice(message); }
 function renderWallet() {
   const wallet = state.wallet; const connected = wallet.phase === WALLET_PHASES.CONNECTED;
   elements.connection.textContent = connected ? "Wallet ready" : wallet.phase === WALLET_PHASES.WRONG_CHAIN ? "Network switch required" : wallet.phase === WALLET_PHASES.CONNECTING ? "Connecting" : "Setup required";
