@@ -38,12 +38,21 @@ def test_wallet_chooser_uses_one_state_and_explicit_user_selection():
         assert phase in app
     assert '<dialog id="wallet-dialog"' in html
     assert '<select id="provider-select"' not in html
-    assert app.count('eth_requestAccounts') == 1
+    assert 'eth_requestAccounts' not in app
     assert 'button.addEventListener("click", () => connectWallet(entry))' in app
     assert 'wallet_switchEthereumChain' in app
     assert 'wallet_addEthereumChain' in app
     assert 'error?.code !== 4902' in app
+    assert 'connectSelectedProvider' in app
+    assert 'state.wallet' not in app
     wallet_session = (ROOT / "frontend" / "wallet-session.js").read_text(encoding="utf-8")
+    assert wallet_session.count('eth_requestAccounts') == 1
+    assert 'eth_accounts' in wallet_session
+    assert 'WALLET_SESSION_STATE_MACHINE' in wallet_session
+    assert 'getWalletState' in wallet_session
+    assert 'subscribeWalletState' in wallet_session
+    assert 'selectWalletView' in wallet_session
+    assert wallet_session.index('eth_requestAccounts') < wallet_session.index('eth_accounts') < wallet_session.index('eth_chainId')
     assert 'provider.removeListener?.("accountsChanged"' in wallet_session
     assert 'provider.removeListener?.("chainChanged"' in wallet_session
     assert 'provider.removeListener?.("disconnect"' in wallet_session

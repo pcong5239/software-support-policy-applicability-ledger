@@ -42,19 +42,39 @@ export function subscribeWalletState(store, listener) {
 export function selectWalletView(storeOrState) {
   const wallet = getWalletState(storeOrState) || DEFAULT_WALLET_STATE;
   const connected = wallet.phase === "CONNECTED";
-  const name = wallet.selected?.info?.name;
+  const name = CANONICAL_WALLET_NAMES[wallet.selected?.brand] || "";
   const address = wallet.account;
   return Object.freeze({
+    phase: wallet.phase,
     connected,
-    chooserOpen: ["CHOOSER_OPEN", "CONNECTING", "ERROR"].includes(wallet.phase),
+    chooserOpen: ["DISCOVERING", "CHOOSER_OPEN", "CONNECTING", "ERROR"].includes(wallet.phase),
     providerOptions: wallet.providers,
+    account: wallet.account,
+    writeClient: wallet.writeClient,
     badge: connected && name && address
       ? `${name} · ${address.slice(0, 6)}…${address.slice(-4)}`
-      : wallet.phase === "WRONG_CHAIN" ? "Wrong network" : "Disconnected",
+      : wallet.phase === "WRONG_CHAIN" ? "Wrong network" : "Not connected",
     primaryAction: connected ? "Disconnect" : wallet.phase === "WRONG_CHAIN" ? "Switch wallet" : "Connect wallet",
     canWrite: connected && Boolean(wallet.writeClient),
     error: wallet.error,
   });
+}
+
+const CANONICAL_WALLET_NAMES = Object.freeze({ metamask: "MetaMask", okx: "OKX Wallet", rabby: "Rabby" });
+
+export async function connectSelectedProvider({ provider, ensureChain = async () => {}, expectedChainId, createWriteClient }) {
+  await provider.request({ method: "eth_requestAccounts" });
+  const accounts = await provider.request({ method: "eth_accounts" });
+  const account = accounts?.[0];
+  if (!account) throw new Error("The wallet returned no account.");
+  await ensureChain(provider);
+  const chainId = String(await provider.request({ method: "eth_chainId" })).toLowerCase();
+  const phase = walletPhaseFor(account, chainId, expectedChainId());
+  return {
+    phase,
+    account,
+    writeClient: phase === "CONNECTED" ? createWriteClient(account, provider) : null,
+  };
 }
 
 export const walletPhaseFor = (account, chainId, expectedChainId) => {

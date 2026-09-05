@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { createProviderRegistry, createProviderSessionEffects, createWalletStore, getWalletState, isCallableProvider, selectWalletView, subscribeWalletState, walletPhaseFor } from "../frontend/wallet-session.js";
+import { connectSelectedProvider, createProviderRegistry, createProviderSessionEffects, createWalletStore, getWalletState, isCallableProvider, selectWalletView, subscribeWalletState, walletPhaseFor } from "../frontend/wallet-session.js";
 
 const accountA = `0x${"1".repeat(40)}`;
 const accountB = `0x${"2".repeat(40)}`;
@@ -34,9 +34,13 @@ let storeNotifications = 0;
 const unsubscribe = subscribeWalletState(store, () => { storeNotifications += 1; });
 assert.equal(getWalletState(store).phase, "DISCONNECTED");
 assert.equal(selectWalletView(store).primaryAction, "Connect wallet");
-store.commit({ phase: "CONNECTED", account: accountA, selected: { info: { name: "MetaMask" } }, writeClient: {} });
+store.commit({ phase: "DISCOVERING", providers: [{ brand: "metamask" }] });
+assert.equal(selectWalletView(store).chooserOpen, true);
+assert.equal(selectWalletView(store).providerOptions.length, 1);
+store.commit({ phase: "CONNECTED", account: accountA, selected: { brand: "metamask", info: { name: "Untrusted label" } }, writeClient: {} });
+assert.equal(selectWalletView(store).badge, `MetaMask · ${accountA.slice(0, 6)}…${accountA.slice(-4)}`);
 assert.equal(selectWalletView(store).canWrite, true);
-assert.equal(storeNotifications, 1);
+assert.equal(storeNotifications, 2);
 unsubscribe();
 
 // Reload starts with a disconnected canonical wallet store and no automatic resubmit.
@@ -46,6 +50,41 @@ const registry = createProviderRegistry();
 const announcedA = { request: async () => null };
 const announcedB = { request: async () => null };
 const providerInfo = (uuid) => ({ uuid, name: "MetaMask", icon: "data:image/svg+xml;base64,AA==" });
+
+function connectionProvider(account = accountA, chainId = expectedChain) {
+  const events = [];
+  return {
+    events,
+    request: async ({ method }) => {
+      events.push(method);
+      if (method === "eth_requestAccounts" || method === "eth_accounts") return [account];
+      if (method === "eth_chainId") return chainId;
+      throw new Error(`Unexpected provider request: ${method}`);
+    },
+  };
+}
+
+// Explicit selected-provider connection: request, account confirmation, chain validation, then write client.
+const selectedProvider = connectionProvider();
+const unselectedProvider = connectionProvider(accountB);
+const selectedConnection = await connectSelectedProvider({
+  provider: selectedProvider,
+  expectedChainId: () => expectedChain,
+  createWriteClient: (account, provider) => {
+    selectedProvider.events.push("write-client");
+    return { account, provider };
+  },
+});
+assert.deepEqual(selectedProvider.events, ["eth_requestAccounts", "eth_accounts", "eth_chainId", "write-client"]);
+assert.deepEqual(unselectedProvider.events, []);
+assert.equal(selectedConnection.phase, "CONNECTED");
+assert.equal(selectedConnection.writeClient.provider, selectedProvider);
+assert.ok(selectedProvider.events.indexOf("write-client") > selectedProvider.events.indexOf("eth_chainId"));
+const connectedStore = createWalletStore();
+connectedStore.commit({ phase: selectedConnection.phase, selected: { brand: "metamask", info: { name: "Untrusted label" } }, account: selectedConnection.account, writeClient: selectedConnection.writeClient });
+assert.equal(selectWalletView(connectedStore).primaryAction, "Disconnect");
+assert.equal(selectWalletView(connectedStore).canWrite, true);
+
 assert.equal(isCallableProvider({ isMetaMask: true }), false);
 assert.equal(isCallableProvider({ request: "not-a-function", isMetaMask: true }), false);
 assert.equal(registry.upsert({ brand: "metamask", info: providerInfo("invalid-legacy"), provider: { isMetaMask: true } }).length, 0);
