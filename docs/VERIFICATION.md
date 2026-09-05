@@ -10,7 +10,7 @@
 - Vercel project: `pcong/software-support-policy-applicability-ledger`
 - Vercel production URL: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app)
 - Vercel exact candidate deployment: `READY`, deployment ID `dpl_5UbN4mNaV2XrucSnXaTzQLGcoP9Z`, serving the `frontend/` static root at the stable production alias; exact deployment URL `https://software-support-policy-applicability-ledger-iiavxdlr7-pcong.vercel.app`.
-- GitHub commit: [`ab78268f519ce1107d64b9c1f085c9c789cca304`](https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/ab78268f519ce1107d64b9c1f085c9c789cca304)
+- GitHub commit: [`886f7f212b642c321e1bcfa7a0c6997a7fab2ab5`](https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/886f7f212b642c321e1bcfa7a0c6997a7fab2ab5)
 
 ## Local checks
 
@@ -40,3 +40,36 @@ The deployed contract source matches the SHA-256 above. The four fresh live rows
 ## Scope and limitations
 
 The current release batch changes only the frontend readback assertion, the evidence-only RPC observer and their regression/evidence records. Contract bytes, deployed address, deployment transaction, and Studio live evidence are unchanged. The observer captures page HTTP RPC metadata without payloads; the OKX extension request method was non-writable and is disclosed as a provider-capture limitation, with provider behavior covered by executable wallet-session tests. The frontend release is now published in the verified GitHub repository; `POST_GITHUB_VERCEL_FINAL` and final release approval are not claimed by this checkpoint record.
+
+## Final category scorecard
+
+Category: `PROJECT`
+Validity gate: `PASS`
+
+### GenLayer fit — 4/5
+
+- Evidence-backed reason: the consensus-critical consequence is whether a frozen software release is supported by an external publisher policy, with validators independently deriving the outcome and the contract storing the result and digest.
+- Exact evidence inspected: `contracts/support_policy_ledger.py`; `verification/studionet-receipts.json`; `verification/POST-DEPLOY-TEST.md` rows PD-03R and PD-04R; final `get_case`/`has_case` readbacks.
+- Remaining weakness: policy evidence can legitimately produce `POLICY_SCOPE_UNCLEAR` or `UNRESOLVED`; the system proves a bounded fail-closed decision, not universal policy availability.
+
+### Contract quality — 4/5
+
+- Evidence-backed reason: bounded registration/freeze/assessment state transitions, owner authorization, HTTPS and input validation, nondeterministic policy verification, retry limits and authoritative readback are implemented and live-tested.
+- Exact evidence inspected: `contracts/support_policy_ledger.py`; contract lint/schema output; `tests/`; `verification/studionet-receipts.json`; finalized PD-01R through PD-04R receipts.
+- Remaining weakness: the deployed contract is intentionally frozen, so a contract defect requires a new deployment and frontend address reconfiguration.
+
+### Engineering — 4/5
+
+- Evidence-backed reason: the repository has incremental history, reproducible commands, 21 passing tests, source/deployment parity, bounded RPC records, finalized receipts and a public verification package.
+- Exact evidence inspected: GitHub commit `886f7f212b642c321e1bcfa7a0c6997a7fab2ab5`; `README.md`; `docs/VERIFICATION.md`; `docs/RPC-BUDGET.md`; canonical release audit output; `tests/` and `verification/`.
+- Remaining weakness: the pinned compatibility runtime emits an informational newer-runner warning and the local runner uses defaults because `gltest.config.yaml` is absent; both facts are documented and do not weaken the live proof.
+
+### Frontend / UX — 4/5
+
+- Evidence-backed reason: the public UI completes wallet selection, validation, register/freeze/assess lifecycle, finality and semantic verification, authoritative readback, reload/reconnect and safe failure/reconciliation behavior with responsive and accessibility checks.
+- Exact evidence inspected: exact Vercel deployment `dpl_5UbN4mNaV2XrucSnXaTzQLGcoP9Z`; frontend revision `cd8407a13307d549fbd5d6ef04f300fa2a097591`; `frontend/`; `tests/frontend_progress.test.js`; `tests/wallet_session.test.js`; exact E2E case `e2e-rpc-20260905-cd8407a`.
+- Remaining weakness: provider-extension physical request counts are not observable in the supported browser surface; the release records page HTTP RPC counts, lifecycle/readback evidence and executable wallet-session regressions, without inferring provider counts.
+
+Overall evidence-based assessment: the exact contract, deployment, GitHub repository and Vercel application are consistent; required local, live, lifecycle, readback, public-claim and bounded RPC evidence passes, with the disclosed provider telemetry limitation handled by the approved alternative evidence plan.
+
+Submission recommendation: `READY` for final release review. Explorer submission has not been made; it requires the separate `EXPLORER_PRE_SUBMISSION` checkpoint and same-package dual approval.
