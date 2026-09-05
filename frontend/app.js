@@ -1,3 +1,4 @@
+import { rpcEvidence } from "./rpc-observer.js";
 import { createClient } from "https://esm.sh/genlayer-js@1.1.8";
 import { studionet } from "https://esm.sh/genlayer-js@1.1.8/chains";
 import { DEFAULT_CONFIG, EXPLORERS } from "./config.js";
@@ -62,6 +63,7 @@ function selectedChain() { return CHAINS[state.network]; }
 function configured() { return Boolean(state.contractAddress && /^0x[0-9a-fA-F]{40}$/.test(state.contractAddress)); }
 function clients() {
   state.readClient = createClient({ chain: selectedChain() });
+  rpcEvidence.mark("client:created");
 }
 function short(value) { return value ? `${value.slice(0, 8)}…${value.slice(-6)}` : "—"; }
 function networkLabel(value) { return NETWORK_LABELS[value] || "Selected network"; }
@@ -261,23 +263,27 @@ async function fetchCase(caseId) {
   return state.readClient.readContract({ address: state.contractAddress, functionName: "get_case", args: [caseId] });
 }
 async function reconcilePending(pending) {
+  rpcEvidence.mark(`${pending.operation}:finality:start`);
   setTransactionProgress("WAITING_FOR_FINALITY", { hash: pending.hash });
   let receipt;
   try { receipt = await waitFinalized(pending.hash); }
   catch (error) { setTransactionProgress("RECONCILIATION_REQUIRED", { hash: pending.hash, message: "Verification is temporarily unavailable. Keep this transaction hash and continue when the network responds." }); throw error; }
   setTransactionProgress("VERIFYING_EXECUTION", { hash: pending.hash });
+  rpcEvidence.mark(`${pending.operation}:execution:verify`);
   if (!isSuccessful(receipt)) {
     clearPendingTransaction();
     setTransactionProgress("FAILED", { hash: pending.hash, message: "The finalized transaction did not complete successfully." });
     throw new Error("Transaction execution failed.");
   }
   setTransactionProgress("VERIFYING_READBACK", { hash: pending.hash });
+  rpcEvidence.mark(`${pending.operation}:readback:start`);
   let record;
   try { record = await fetchCase(pending.caseId); assertExpectedReadback(record, pending); }
   catch (error) { setTransactionProgress("RECONCILIATION_REQUIRED", { hash: pending.hash, message: "The transaction is finalized, but its ledger state could not be verified. Do not submit again." }); throw error; }
   clearPendingTransaction();
   renderRecord(record);
   setTransactionProgress("SUCCESS", { hash: pending.hash });
+  rpcEvidence.mark(`${pending.operation}:complete`);
   return record;
 }
 async function resumePendingTransaction() {
@@ -299,6 +305,7 @@ async function continuePendingTransaction() {
   finally { transactionInFlight = false; updateButtons(); }
 }
 async function write(functionName, args, button, pendingLabel) {
+  rpcEvidence.mark(`${functionName}:start`);
   assertReady(true);
   if (transactionInFlight || pendingTransaction()) throw new Error("A transaction is waiting for verification. Continue verification before submitting another.");
   assertRecoveryStorage();
@@ -312,6 +319,7 @@ async function write(functionName, args, button, pendingLabel) {
     catch (error) { setTransactionProgress(isUserRejection(error) ? "REJECTED" : "RECONCILIATION_REQUIRED", { message: isUserRejection(error) ? "The wallet request was cancelled. Review the form and try again." : "The wallet response was uncertain. Check the wallet activity before trying again." }); throw error; }
     if (!isHash(hash)) { setTransactionProgress("RECONCILIATION_REQUIRED", { message: "The wallet did not return a usable transaction reference. Check the wallet activity before trying again." }); throw new Error("Invalid transaction hash."); }
     pending.hash = hash;
+    rpcEvidence.mark(`${functionName}:submitted`);
     const persisted = savePendingTransaction(pending);
     setTransactionProgress("SUBMITTED", { hash });
     if (!persisted) elements.txDetail.textContent = "Keep this page open until verification finishes. Do not submit again.";
@@ -336,7 +344,7 @@ async function assess() {
   catch (error) { showNotice(userFacingError(error, "write"), true); }
 }
 async function readCase(caseId = state.lastCaseId || elements.caseId.value.trim()) {
-  try { if (!caseId) throw new Error("Enter a case ID to read back."); const record = await fetchCase(caseId); state.lastCaseId = caseId; renderRecord(record); showNotice(`Verified case state loaded for ${caseId}.`); }
+  try { if (!caseId) throw new Error("Enter a case ID to read back."); rpcEvidence.mark("readback:explicit:start"); const record = await fetchCase(caseId); state.lastCaseId = caseId; renderRecord(record); rpcEvidence.mark("readback:explicit:complete"); showNotice(`Verified case state loaded for ${caseId}.`); }
   catch (error) { showNotice(userFacingError(error, "read"), true); }
 }
 function renderRecord(record) {

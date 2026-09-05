@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 const root = new URL("../", import.meta.url);
 const read = (path) => readFileSync(new URL(path, root), "utf8");
 const app = read("frontend/app.js");
+const observer = read("frontend/rpc-observer.js");
 const html = read("frontend/index.html");
 const css = read("frontend/styles.css");
 
@@ -39,4 +40,9 @@ assert.match(app, /transactionInFlight/);
 assert.match(app, /assertExpectedReadback|readback/i);
 assert.match(app, /transaction hash|pendingTransaction|PENDING_STORAGE_KEY/i);
 assert.match(app, /reconciliation/i);
+assert.match(app, /rpcEvidence\.mark/);
+assert.match(observer, /searchParams\.get\("evidence"\)/);
+assert.match(observer, /source: "fetch"/);
+assert.match(observer, /source: "provider"/);
+assert.doesNotMatch(observer, /JSON\.stringify\(body\)/);
 console.log("frontend transaction progress/static checks: PASS");

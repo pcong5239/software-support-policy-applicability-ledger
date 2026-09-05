@@ -1,3 +1,5 @@
+import { observeProvider } from "./rpc-observer.js";
+
 export const WALLET_SESSION_STATE_MACHINE = true;
 
 const DEFAULT_WALLET_STATE = Object.freeze({
@@ -63,17 +65,18 @@ export function selectWalletView(storeOrState) {
 const CANONICAL_WALLET_NAMES = Object.freeze({ metamask: "MetaMask", okx: "OKX Wallet", rabby: "Rabby" });
 
 export async function connectSelectedProvider({ provider, ensureChain = async () => {}, expectedChainId, createWriteClient }) {
-  await provider.request({ method: "eth_requestAccounts" });
-  const accounts = await provider.request({ method: "eth_accounts" });
+  const observedProvider = observeProvider(provider, "selected");
+  await observedProvider.request({ method: "eth_requestAccounts" });
+  const accounts = await observedProvider.request({ method: "eth_accounts" });
   const account = accounts?.[0];
   if (!account) throw new Error("The wallet returned no account.");
-  await ensureChain(provider);
-  const chainId = String(await provider.request({ method: "eth_chainId" })).toLowerCase();
+  await ensureChain(observedProvider);
+  const chainId = String(await observedProvider.request({ method: "eth_chainId" })).toLowerCase();
   const phase = walletPhaseFor(account, chainId, expectedChainId());
   return {
     phase,
     account,
-    writeClient: phase === "CONNECTED" ? createWriteClient(account, provider) : null,
+    writeClient: phase === "CONNECTED" ? createWriteClient(account, observedProvider) : null,
   };
 }
 
@@ -148,6 +151,7 @@ export function createProviderSessionEffects({ expectedChainId, getAccount, crea
   function bind(provider, token) {
     removeProviderListeners();
     if (!provider?.on || !guard.isCurrent(token)) return;
+    const observedProvider = observeProvider(provider, "bound");
 
     const accountsChanged = async (accounts) => {
       if (!guard.isCurrent(token)) return;
@@ -162,7 +166,7 @@ export function createProviderSessionEffects({ expectedChainId, getAccount, crea
       onReset();
       onSnapshot({ phase: "CONNECTING", account, writeClient: null });
       let chainId;
-      try { chainId = await provider.request({ method: "eth_chainId" }); }
+      try { chainId = await observedProvider.request({ method: "eth_chainId" }); }
       catch {
         if (guard.isCurrent(token)) {
           onSnapshot({ phase: "WRONG_CHAIN", account, writeClient: null });
@@ -173,7 +177,7 @@ export function createProviderSessionEffects({ expectedChainId, getAccount, crea
       }
       if (!guard.isCurrent(token)) return;
       const phase = walletPhaseFor(account, chainId, expectedChainId());
-      onSnapshot({ phase, account, writeClient: phase === "CONNECTED" ? createWriteClient(account, provider) : null });
+      onSnapshot({ phase, account, writeClient: phase === "CONNECTED" ? createWriteClient(account, observedProvider) : null });
       onNotice(phase === "CONNECTED" ? "Account changed. Readback context was cleared." : "Account changed while the wallet is on another network.", phase !== "CONNECTED");
     };
 
