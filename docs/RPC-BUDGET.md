@@ -1,6 +1,6 @@
 # RPC Budget Record
 
-RPC_BUDGET_REVISION: contract c53f6156e0bf8ff2f86339df5677e2149bd5c48b; frontend candidate commit b8ef326f60e77ce5e1a4691cb9d59d59cb8493c9
+RPC_BUDGET_REVISION: contract c53f6156e0bf8ff2f86339df5677e2149bd5c48b; frontend candidate commit cbcdf0525ab6f2978f061c6f2ca21721e52c5700
 OFFICIAL_DOCS_CHECKED: https://docs.genlayer.com/api-references/genlayer-js and https://docs.genlayer.com/api-references/genlayer-node/gen/gen_getTransactionStatus; checked 2026-09-05 UTC
 
 The Studio and frontend scopes are measured separately. Studio evidence is inherited from the approved deployed package because this release batch does not change contract bytes, ABI, address, network, or Studio transactions. The exact Vercel production URL is deployed and serves the frontend; browser transaction measurements remain pending the controlled E2E run.
@@ -57,7 +57,7 @@ FRONTEND_SCOPE: APPLICABLE
 - The current frontend batch uses one shared `readClient` per selected network and one provider-bound write client; it has no interval poller, recursive retry, duplicate write path, or competing read cache.
 - The coordinator emits `WAITING_FOR_WALLET`, `SUBMITTED`, `WAITING_FOR_FINALITY`, `VERIFYING_EXECUTION`, `VERIFYING_READBACK`, and terminal phases from actual promise/lifecycle outcomes.
 - A valid hash is persisted before verification; readback uncertainty becomes `RECONCILIATION_REQUIRED`, and no automatic write retry exists.
-- Local integrated-browser review verified the disconnected initial state, native chooser focus, zero-wallet cardinality without fake options, no account request on chooser open, complete public instructions, and no visible technical leakage. Automated checks report `20 passed`.
+- Local integrated-browser review verified the disconnected initial state, native chooser focus, zero-wallet cardinality without fake options, no account request on chooser open, complete public instructions, and no visible technical leakage. Executable wallet-session regressions cover wrong-chain account changes and stale-session invalidation. Automated checks report `21 passed`.
 - Vercel production: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app), `READY`, HTTP 200 for the application entrypoint from the `frontend/` static root. Browser request counts, wallet path, transaction hashes, finality, readback, and bounded defect-sweep evidence remain pending the controlled E2E run and must be added before `POST_GITHUB_VERCEL_FINAL`.
 - FRONTEND_MATRIX_STATUS: COMPLETE
 - FRONTEND_EVIDENCE_STATUS: PENDING_VERCEL_EXACT_RELEASE
