@@ -37,6 +37,16 @@ assert.equal(registry.upsert({ brand: "metamask", info: providerInfo("same-uuid"
 assert.equal(registry.upsert({ brand: "metamask", info: providerInfo("same-uuid"), provider: announcedB }).length, 1);
 assert.equal(registry.values()[0].provider, announcedB);
 
+const conflictRegistry = createProviderRegistry();
+const metaMaskProvider = { request: async () => null };
+const okxProvider = { request: async () => null };
+const conflictResult = conflictRegistry.upsert({ brand: "metamask", info: providerInfo("owned-by-metamask"), provider: metaMaskProvider });
+assert.equal(conflictResult.length, 1);
+conflictRegistry.upsert({ brand: "okx", info: providerInfo("owned-by-okx"), provider: okxProvider });
+const unchanged = conflictRegistry.upsert({ brand: "rabby", info: providerInfo("owned-by-metamask"), provider: okxProvider });
+assert.deepEqual(unchanged.map(({ brand }) => brand), ["metamask", "okx"]);
+assert.equal(unchanged[1].provider, okxProvider);
+
 const snapshots = [];
 const notices = [];
 let resets = 0;

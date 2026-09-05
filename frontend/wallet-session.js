@@ -26,11 +26,11 @@ export function createProviderRegistry() {
   }
 
   function upsert(entry) {
+    const uuidOwner = byUuid.get(entry.info.uuid);
+    if (uuidOwner && uuidOwner !== entry.brand) return [...byBrand.values()];
     const existingBrand = brandByProvider.get(entry.provider);
     if (existingBrand && existingBrand !== entry.brand) removeBrand(existingBrand);
     const current = byBrand.get(entry.brand);
-    const uuidOwner = byUuid.get(entry.info.uuid);
-    if (uuidOwner && uuidOwner !== entry.brand) return [...byBrand.values()];
     if (current) {
       if (current.provider === entry.provider && current.info.uuid === entry.info.uuid && current.info.icon === entry.info.icon && current.info.name === entry.info.name) return [...byBrand.values()];
       byUuid.delete(current.info.uuid);
