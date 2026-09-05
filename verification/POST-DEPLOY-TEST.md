@@ -18,7 +18,7 @@ Fresh replacement matrix recorded after explicit user authorization on 2026-09-0
 - Studio account/role: `0x34b92E6553eaCA11A00A9d86d75d8a7881779D78` / `deployer`
 - Deployment status/result: `FINALIZED` / `SUCCESS`; execution mode `NORMAL`.
 - Frontend deployment configuration: `frontend/config.js` points to this exact contract address.
-- GitHub release: `https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/20bfb61adee39de2436e3030a58f4aa4a805124e`
+- GitHub release: `https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/e055cd548ba22fb62786f410190a2f837bec5832`
 - Vercel project: `pcong/software-support-policy-applicability-ledger`
 - Vercel production URL: `https://software-support-policy-applicability-ledger-pcong.vercel.app`
 - Vercel serving root: `frontend/`; production entrypoint returned HTTP 200 and the expected application title.

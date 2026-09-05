@@ -10,7 +10,7 @@
 - Vercel project: `pcong/software-support-policy-applicability-ledger`
 - Vercel production URL: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app)
 - Vercel exact candidate deployment: `READY`, deployment ID `dpl_DeeZFKg7TjiQcpg2ZaMS918VtHVC`, serving the `frontend/` static root at the stable production alias.
-- GitHub commit: [`20bfb61adee39de2436e3030a58f4aa4a805124e`](https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/20bfb61adee39de2436e3030a58f4aa4a805124e)
+- GitHub commit: [`e055cd548ba22fb62786f410190a2f837bec5832`](https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/e055cd548ba22fb62786f410190a2f837bec5832)
 
 ## Local checks
 
