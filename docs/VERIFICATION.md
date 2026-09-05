@@ -10,7 +10,7 @@
 - Vercel project: `pcong/software-support-policy-applicability-ledger`
 - Vercel production URL: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app)
 - Vercel production serving: `READY` at the stable production alias; the frontend is deployed from the `frontend/` static root.
-- GitHub commit: [`279db208cecb440165c828fa2e0cd21a4d1ce680`](https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/279db208cecb440165c828fa2e0cd21a4d1ce680)
+- GitHub commit: pending exact candidate push; the currently public prior release is [`279db208cecb440165c828fa2e0cd21a4d1ce680`](https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/279db208cecb440165c828fa2e0cd21a4d1ce680)
 
 ## Local checks
 
@@ -24,7 +24,7 @@ node tests/frontend_progress.test.js
 git diff --check
 ```
 
-Current candidate result: contract lint/schema PASS; `21 passed`; frontend syntax/static checks PASS; executable provider/session integration regression PASS; integrated-browser disconnected load and zero-wallet chooser PASS; public instructions and required DOM hooks present; no visible wallet-routing/RPC/debug leakage. Frontend candidate commit: `0219155f7cc0230a5059f0eb97ebcdb136d971cc`. The existing Vercel production alias still serves the prior release; exact-candidate Vercel E2E and measured frontend RPC evidence remain pending.
+Current candidate result: contract lint/schema PASS; `21 passed`; frontend syntax/static checks PASS; executable provider/session integration regression PASS; integrated-browser disconnected load and zero-wallet chooser PASS; public instructions and required DOM hooks present; no visible wallet-routing/RPC/debug leakage. Frontend candidate commit: `c13e1ff2ebd508ba735a73dd52f372cd52e61787`. The existing Vercel production alias still serves the prior release; exact-candidate Vercel E2E and measured frontend RPC evidence remain pending.
 
 ## Deployed-source parity and live proof
 
