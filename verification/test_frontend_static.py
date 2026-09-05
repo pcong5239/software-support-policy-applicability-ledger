@@ -43,9 +43,10 @@ def test_wallet_chooser_uses_one_state_and_explicit_user_selection():
     assert 'wallet_switchEthereumChain' in app
     assert 'wallet_addEthereumChain' in app
     assert 'error?.code !== 4902' in app
-    assert 'provider.removeListener?.("accountsChanged"' in app
-    assert 'provider.removeListener?.("chainChanged"' in app
-    assert 'provider.removeListener?.("disconnect"' in app
+    wallet_session = (ROOT / "frontend" / "wallet-session.js").read_text(encoding="utf-8")
+    assert 'provider.removeListener?.("accountsChanged"' in wallet_session
+    assert 'provider.removeListener?.("chainChanged"' in wallet_session
+    assert 'provider.removeListener?.("disconnect"' in wallet_session
     assert 'window.addEventListener("eip6963:announceProvider"' in app
     assert 'window.addEventListener("load"' not in app
 
@@ -93,4 +94,4 @@ def test_wallet_session_regressions_execute():
         check=False,
     )
     assert result.returncode == 0, result.stderr
-    assert "wallet session regressions passed" in result.stdout
+    assert "wallet session integration regressions passed" in result.stdout
