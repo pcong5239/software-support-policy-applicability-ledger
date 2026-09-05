@@ -63,7 +63,7 @@ Open `http://127.0.0.1:4173/frontend/index.html`. The browser client imports the
 
 ## Tests and verification
 
-The current local result is `19 passed`, contract schema/lint PASS, frontend static checks PASS, Node syntax PASS, and `git diff --check` PASS. The exact deployed source hash, Studionet receipts, live matrix, and independent checkpoint evidence are in [`docs/VERIFICATION.md`](docs/VERIFICATION.md) and [`docs/RPC-BUDGET.md`](docs/RPC-BUDGET.md).
+The current local result is `21 passed`, contract schema/lint PASS, frontend static checks PASS, Node syntax PASS, and `git diff --check` PASS. The exact deployed source hash, Studionet receipts, live matrix, and independent checkpoint evidence are in [`docs/VERIFICATION.md`](docs/VERIFICATION.md) and [`docs/RPC-BUDGET.md`](docs/RPC-BUDGET.md).
 
 ## Deployment and recovery
 
