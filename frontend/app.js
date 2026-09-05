@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/genlayer-js@1.1.8";
 import { studionet } from "https://esm.sh/genlayer-js@1.1.8/chains";
 import { DEFAULT_CONFIG, EXPLORERS } from "./config.js";
-import { createProviderRegistry, createProviderSessionEffects } from "./wallet-session.js";
+import { createProviderRegistry, createProviderSessionEffects, isCallableProvider } from "./wallet-session.js";
 
 const CHAINS = { studionet };
 const SUPPORTED_WALLETS = Object.freeze({ metamask: "MetaMask", okx: "OKX Wallet", rabby: "Rabby" });
@@ -130,7 +130,7 @@ function supportedBrand(info) {
   return "";
 }
 function validAnnouncement(detail) {
-  return Boolean(detail?.provider?.request && detail?.info?.uuid && detail?.info?.name && detail?.info?.rdns && /^data:image\//i.test(detail?.info?.icon || "") && supportedBrand(detail.info));
+  return Boolean(isCallableProvider(detail?.provider) && detail?.info?.uuid && detail?.info?.name && detail?.info?.rdns && /^data:image\//i.test(detail?.info?.icon || "") && supportedBrand(detail.info));
 }
 function commitWallet(patch) {
   state.wallet = Object.freeze({ ...state.wallet, ...patch });
@@ -145,6 +145,7 @@ function announceProvider(event) {
   addProvider({ brand, info: { ...event.detail.info, name: SUPPORTED_WALLETS[brand] }, provider: event.detail.provider, legacy: false });
 }
 function legacyBrand(provider) {
+  if (!isCallableProvider(provider)) return "";
   const matches = [provider?.isMetaMask && !provider?.isRabby ? "metamask" : "", provider?.isOkxWallet || provider?.isOKExWallet ? "okx" : "", provider?.isRabby ? "rabby" : ""].filter(Boolean);
   return matches.length === 1 ? matches[0] : "";
 }

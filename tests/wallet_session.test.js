@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { createProviderRegistry, createProviderSessionEffects, walletPhaseFor } from "../frontend/wallet-session.js";
+import { createProviderRegistry, createProviderSessionEffects, isCallableProvider, walletPhaseFor } from "../frontend/wallet-session.js";
 
 const accountA = `0x${"1".repeat(40)}`;
 const accountB = `0x${"2".repeat(40)}`;
@@ -33,6 +33,10 @@ const registry = createProviderRegistry();
 const announcedA = { request: async () => null };
 const announcedB = { request: async () => null };
 const providerInfo = (uuid) => ({ uuid, name: "MetaMask", icon: "data:image/svg+xml;base64,AA==" });
+assert.equal(isCallableProvider({ isMetaMask: true }), false);
+assert.equal(isCallableProvider({ request: "not-a-function", isMetaMask: true }), false);
+assert.equal(registry.upsert({ brand: "metamask", info: providerInfo("invalid-legacy"), provider: { isMetaMask: true } }).length, 0);
+assert.equal(registry.upsert({ brand: "metamask", info: providerInfo("invalid-announcement"), provider: { request: "not-a-function" } }).length, 0);
 assert.equal(registry.upsert({ brand: "metamask", info: providerInfo("same-uuid"), provider: announcedA }).length, 1);
 assert.equal(registry.upsert({ brand: "metamask", info: providerInfo("same-uuid"), provider: announcedB }).length, 1);
 assert.equal(registry.values()[0].provider, announcedB);

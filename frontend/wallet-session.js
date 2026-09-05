@@ -3,6 +3,8 @@ export const walletPhaseFor = (account, chainId, expectedChainId) => {
   return String(chainId || "").toLowerCase() === String(expectedChainId || "").toLowerCase() ? "CONNECTED" : "WRONG_CHAIN";
 };
 
+export const isCallableProvider = (provider) => typeof provider?.request === "function";
+
 export function createSessionGuard() {
   let generation = 0;
   return Object.freeze({
@@ -26,6 +28,7 @@ export function createProviderRegistry() {
   }
 
   function upsert(entry) {
+    if (!isCallableProvider(entry?.provider)) return [...byBrand.values()];
     const uuidOwner = byUuid.get(entry.info.uuid);
     if (uuidOwner && uuidOwner !== entry.brand) return [...byBrand.values()];
     const existingBrand = brandByProvider.get(entry.provider);
