@@ -9,29 +9,67 @@ The Studio and frontend scopes are measured separately. Studio evidence is inher
 
 STUDIO_SCOPE: APPLICABLE
 
+## STUDIO RPC MEASUREMENT CAPABILITY PROBE
+
+STUDIO_CAPABILITY_PROBE_STATUS: COMPLETE
+STUDIO_MEASUREMENT_MODE: OBSERVABLE_ACTION_LEDGER
+STUDIO_MEASUREMENT_TIMING: RETROSPECTIVE_LEGACY
+STUDIO_CAPABILITY_PROBE_AT: 2026-09-05T17:58:17Z
+STUDIO_FIRST_ACTION_AT: 2026-09-01T02:20:51.464Z
+STUDIO_E2E_STARTED_AT: 2026-09-01T02:52:16.178Z
+STUDIO_CAPABILITY_TOOL_OR_API: Codex Browser runtime documentation, capability listing, and retained Studio action trace
+STUDIO_CAPABILITY_CHECK: The retained browser surface exposes DOM, screenshots and developer logs but no request-event/CDP/performance network stream; direct canonical JSON-RPC reads can verify existing hashes only.
+STUDIO_CAPABILITY_RESULT: Physical Studio request telemetry is unavailable. Existing primary-AI Studio actions, transaction hashes, bounded status checkpoints, terminal receipt observations and authoritative readbacks are observable and recorded below.
+STUDIO_PHYSICAL_COUNT_SOURCE: NOT_APPLICABLE
+STUDIO_PHYSICAL_COUNT_CLAIM: NONE
+STUDIO_REPLAY_FOR_MEASUREMENT: NO
+
 ### STUDIO RPC BUDGET MATRIX
 
-| Operation | Trigger | Planned maximum | Transactions | Terminal condition |
-|---|---|---:|---:|---|
-| Network/account/source checks | Before deployment and live matrix | 1 bounded check per item | 0 | Network, deployer role, source and schema match |
-| Deployment | One approved deployment | 1 | 1 | `FINALIZED`, execution `SUCCESS`, parity readback |
-| Register case | Unique live transition | 1 write plus bounded status/terminal receipt | 1 | `FINALIZED`, `SUCCESS`, case is `DRAFT` |
-| Freeze case | Unique live transition | 1 write plus bounded status/terminal receipt | 1 | `FINALIZED`, `SUCCESS`, case is `FROZEN` |
-| Assess case | Unique nondeterministic transition | 1 write plus bounded status/terminal receipt | 1 | `FINALIZED`, `SUCCESS`, case is `ASSESSED` |
-| Retry unresolved | Unique retry transition | 1 write plus bounded status/terminal receipt | 1 | `FINALIZED`, `SUCCESS`, retry count increments |
-| Authoritative readback | After each terminal write | 1 per transition plus final views | 0 | `get_case`/`has_case` matches expected state |
-| Retry/cooldown | Only on transport/rate-limit uncertainty | 0 automatic retries | 0 | Preserve hash and stop on terminal/cooldown |
+STUDIO_MATRIX_STATUS: COMPLETE
+
+| Operation/case | RPC method or Studio action | Trigger | Planned maximum | Poll interval / attempts | Retry/cooldown | Terminal condition | Transaction count | Evidence |
+|---|---|---|---:|---|---|---|---:|---|
+| Network/account/source checks | Studio UI/API checks | Before deployment and live matrix | 1 bounded check per item | Not wire-observable | No retry | Network, role, source and schema match | 0 | deployment manifest and Studio trace |
+| Deployment | Deploy exact approved source | One approved deployment | 1 submission | Bounded terminal observation | 0 automatic retries | `FINALIZED`, execution `SUCCESS`, parity readback | 1 | `0xda771a...0ba6b5` |
+| Register case | `register_case` | Unique live transition | 1 submission | Bounded terminal observation | 0 automatic retries | `FINALIZED`, `SUCCESS`, case `DRAFT` | 1 | `0xa47f47...e48ffde4` |
+| Freeze case | `freeze_case` | Unique live transition | 1 submission | Bounded terminal observation | 0 automatic retries | `FINALIZED`, `SUCCESS`, case `FROZEN` | 1 | `0x341208...2988cded` |
+| Assess case | `assess` | Unique nondeterministic transition | 1 submission | Bounded terminal observation | 0 automatic retries | `FINALIZED`, `SUCCESS`, case `ASSESSED` | 1 | `0xfbc486...c03580e4` |
+| Retry unresolved | `retry_unresolved` | Unique retry transition | 1 submission | Bounded terminal observation | 0 automatic retries | `FINALIZED`, `SUCCESS`, retry count increments | 1 | `0xa26d1e...25725623` |
+| Authoritative readback | `get_case` / `has_case` | After terminal transitions and final state | 1 per required read | No polling loop | 0 | Stored state matches expected state | 0 | Studio trace and canonical readback |
+| Retry/cooldown | Studio session control | Only on transport/rate-limit uncertainty | 0 automatic retries | Stop on terminal/cooldown | No replay | Preserve exact hash | 0 | no replay/redeploy for measurement |
 
 ### STUDIO RPC BUDGET EVIDENCE
+
+STUDIO_EVIDENCE_STATUS: COMPLETE
+STUDIO_ACTION_LEDGER_STATUS: COMPLETE
+STUDIO_PHYSICAL_REQUESTS: NOT_APPLICABLE
+STUDIO_ACTIONS: 5
+STUDIO_TRANSACTIONS: 5
+STUDIO_TRANSACTION_HASHES: deployment `0xda771a...0ba6b5`; register `0xa47f47...e48ffde4`; freeze `0x341208...2988cded`; assess `0xfbc486...c03580e4`; retry `0xa26d1e...25725623`
+STUDIO_STATUS_POLL_ATTEMPTS: 10
+STUDIO_TERMINAL_RECEIPT_READS: 5
+STUDIO_AUTHORITATIVE_READBACKS: 7
+STUDIO_RETRIES: 0
+STUDIO_DUPLICATE_TRANSACTIONS: 0
+STUDIO_MATRIX_VARIANCE: 0 unexplained variance; physical request total is not observable and is intentionally not claimed
+
+The counts above are primary-AI Studio action-ledger counts from the retained exact-run trace, not physical network-request counts. `STUDIO_STATUS_POLL_ATTEMPTS` counts the ten bounded terminal-status checkpoints across deployment and the four live writes; `STUDIO_TERMINAL_RECEIPT_READS` counts one terminal receipt observation per transaction; `STUDIO_AUTHORITATIVE_READBACKS` counts five per-transition readbacks plus the final `get_case` and `has_case` views. No missing physical metric is represented as zero.
+
+| Operation/case | Physical requests if observable | Studio actions | Transactions | Hash | Status polls | Terminal receipt reads | Authoritative readbacks | Retries | Variance/result |
+|---|---:|---:|---:|---|---:|---:|---:|---:|---|
+| Deployment | NOT_APPLICABLE | 1 | 1 | `0xda771a...0ba6b5` | 1 | 1 | 1 | 0 | `FINALIZED` / `SUCCESS` / parity verified |
+| `live-20260901-02` register | NOT_APPLICABLE | 1 | 1 | `0xa47f47...e48ffde4` | 3 | 1 | 1 | 0 | `FINALIZED` / `MAJORITY_AGREE` / `DRAFT` |
+| `live-20260901-02` freeze | NOT_APPLICABLE | 1 | 1 | `0x341208...2988cded` | 2 | 1 | 1 | 0 | `FINALIZED` / `MAJORITY_AGREE` / `FROZEN` |
+| `live-20260901-02` assess | NOT_APPLICABLE | 1 | 1 | `0xfbc486...c03580e4` | 2 | 1 | 1 | 0 | `FINALIZED` / `MAJORITY_AGREE` / `ASSESSED` |
+| `live-20260901-02` retry | NOT_APPLICABLE | 1 | 1 | `0xa26d1e...25725623` | 2 | 1 | 1 | 0 | `FINALIZED` / `MAJORITY_AGREE` / retry `1` |
+| Final views (`get_case`, `has_case`) | NOT_APPLICABLE | 0 | 0 | none | 0 | 0 | 2 | 0 | authoritative final state confirmed |
 
 - Scope: Studionet, chain ID `61999`, contract `0x97375A261D51ec8B90D4DE44eD5Ea4711a598355`, deployer role recorded in the deployment manifest.
 - Deployment: one finalized successful deployment transaction, hash recorded in [`docs/VERIFICATION.md`](VERIFICATION.md).
 - Live matrix: four unique writes (`register_case`, `freeze_case`, `assess`, `retry_unresolved`) for `live-20260901-02`; each has an authoritative hash, `FINALIZED`, `MAJORITY_AGREE`, validator `SUCCESS`, matching receipt hash, and receipt status `0x1`.
 - No duplicate Studio write or redeploy was created for the frontend-only batch. The earlier non-reproducible register receipt remains superseded history and is not reused as proof.
-- Status polling was bounded by the Studio session and stopped at terminal state; the canonical recheck time and all four hashes are in `verification/studionet-receipts.json`.
-- Variance: the legacy Studio evidence package did not expose a machine-counted per-RPC total. This record therefore claims only the measured transaction/readback facts above and does not invent a call count.
-- STUDIO_MATRIX_STATUS: COMPLETE
-- STUDIO_EVIDENCE_STATUS: COMPLETE
+- Status polling was bounded by the Studio session and stopped at terminal state; the canonical recheck time and all four hashes are in `verification/studionet-receipts.json`. The action-ledger count is retrospective and does not claim physical request visibility.
 
 ## FRONTEND_SCOPE
 

@@ -6,6 +6,8 @@ This record is bound to the exact deployed source and Studionet instance below. 
 
 The previously unverifiable `PD-01` remains superseded by `PD-01R`. The Studio contract and live matrix remain unchanged. The exact Vercel E2E release was repaired, redeployed once, and completed on 2026-09-05 UTC. The earlier frontend candidate `0e0c7a69e0ffbf476612b95343e930c6d24b81dd` and its blocked-platform run are superseded by frontend fix commit `cd8407a13307d549fbd5d6ef04f300fa2a097591`; anonymous re-review is required for this refreshed package.
 
+Studio evidence mode is locked as `OBSERVABLE_ACTION_LEDGER` with retrospective timing. The retained Studio trace records five transaction-producing actions, five transactions, ten bounded status checkpoints, five terminal receipt observations, seven authoritative readbacks, zero retries and zero duplicate transactions. Physical Studio request counts are unavailable and are not claimed; the complete ledger is in `docs/RPC-BUDGET.md` and the machine-readable receipt package.
+
 ## Identity and deployment
 
 - Project: Software Support Policy Applicability Ledger
