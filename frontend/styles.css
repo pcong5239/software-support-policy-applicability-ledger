@@ -196,8 +196,7 @@ a {
 .wallet-options { display: grid; gap: var(--space-2xs); margin-block: var(--space-md); }
 .wallet-option { width: 100%; display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs); border: 1px solid var(--color-rule); border-radius: var(--radius-md); background: var(--color-paper-subtle); color: var(--color-ink); cursor: pointer; text-align: left; }
 .wallet-option:hover, .wallet-option:focus-visible { border-color: var(--color-accent); background: var(--color-accent-soft); }
-.wallet-option img, .wallet-monogram { width: 2rem; height: 2rem; border-radius: var(--radius-sm); }
-.wallet-monogram { display: inline-grid; place-items: center; background: var(--color-accent); color: var(--color-accent-ink); font-weight: 700; }
+.wallet-option img { width: 2rem; height: 2rem; border-radius: var(--radius-sm); }
 .wallet-option-copy { display: grid; gap: var(--space-3xs); }
 .wallet-option-copy small { color: var(--color-ink-tertiary); }
 .wallet-dialog-actions { display: flex; justify-content: flex-end; margin-top: var(--space-sm); }

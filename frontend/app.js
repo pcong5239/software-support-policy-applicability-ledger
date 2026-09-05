@@ -5,6 +5,11 @@ import { connectSelectedProvider, createProviderRegistry, createProviderSessionE
 
 const CHAINS = { studionet };
 const SUPPORTED_WALLETS = Object.freeze({ metamask: "MetaMask", okx: "OKX Wallet", rabby: "Rabby" });
+const SUPPORTED_WALLET_RDNS = Object.freeze({
+  metamask: Object.freeze(["io.metamask"]),
+  okx: Object.freeze(["com.okex.wallet", "com.okx.wallet"]),
+  rabby: Object.freeze(["io.rabby"]),
+});
 const WALLET_PHASES = Object.freeze({ DISCONNECTED: "DISCONNECTED", DISCOVERING: "DISCOVERING", CHOOSER_OPEN: "CHOOSER_OPEN", CONNECTING: "CONNECTING", CONNECTED: "CONNECTED", WRONG_CHAIN: "WRONG_CHAIN", ERROR: "ERROR" });
 const NETWORK_LABELS = Object.freeze({ studionet: "Studionet" });
 const ACTION_LABELS = Object.freeze({ assess: "Policy assessment", freeze_case: "Case freeze", register_case: "Case registration", retry_unresolved: "Assessment retry" });
@@ -136,11 +141,7 @@ function currentFormCase() { return { case_id: elements.caseId.value.trim(), pro
 
 function supportedBrand(info) {
   const rdns = String(info?.rdns || "").toLowerCase();
-  const name = String(info?.name || "").toLowerCase();
-  if (rdns.includes("metamask") || name.includes("metamask")) return "metamask";
-  if (rdns.includes("okex") || rdns.includes("okx") || name.includes("okx")) return "okx";
-  if (rdns.includes("rabby") || name.includes("rabby")) return "rabby";
-  return "";
+  return Object.keys(SUPPORTED_WALLET_RDNS).find((brand) => SUPPORTED_WALLET_RDNS[brand].includes(rdns)) || "";
 }
 function validAnnouncement(detail) {
   return Boolean(isCallableProvider(detail?.provider) && detail?.info?.uuid && detail?.info?.name && detail?.info?.rdns && /^data:image\//i.test(detail?.info?.icon || "") && supportedBrand(detail.info));
@@ -149,6 +150,7 @@ function commitWallet(patch) {
   walletStore.commit(patch);
 }
 function addProvider(entry) {
+  if (!entry?.info?.icon || !/^data:image\//i.test(entry.info.icon)) return;
   commitWallet({ providers: providerRegistry.upsert(entry) });
 }
 function announceProvider(event) {
@@ -156,17 +158,23 @@ function announceProvider(event) {
   const brand = supportedBrand(event.detail.info);
   addProvider({ brand, info: { ...event.detail.info, name: SUPPORTED_WALLETS[brand] }, provider: event.detail.provider, legacy: false });
 }
-function legacyBrand(provider) {
+function legacyBrand(provider, source = "") {
   if (!isCallableProvider(provider)) return "";
+  if (source === "okxwallet") return provider.isRabby ? "" : "okx";
+  if (source === "rabby") return provider.isRabby ? "rabby" : "";
   const matches = [provider?.isMetaMask && !provider?.isRabby ? "metamask" : "", provider?.isOkxWallet || provider?.isOKExWallet ? "okx" : "", provider?.isRabby ? "rabby" : ""].filter(Boolean);
   return matches.length === 1 ? matches[0] : "";
+}
+function legacyIcon(provider) {
+  const icon = typeof provider?.icon === "string" ? provider.icon : "";
+  return /^data:image\//i.test(icon) ? icon : "";
 }
 function renderProviders() {
   elements.providers.replaceChildren();
   walletView().providerOptions.forEach((entry) => {
     const button = document.createElement("button");
     button.type = "button"; button.className = "wallet-option"; button.dataset.wallet = entry.brand; button.setAttribute("role", "listitem");
-    const icon = entry.info.icon && /^data:image\//i.test(entry.info.icon) ? Object.assign(document.createElement("img"), { src: entry.info.icon, alt: "" }) : Object.assign(document.createElement("span"), { className: "wallet-monogram", textContent: SUPPORTED_WALLETS[entry.brand][0] });
+    const icon = Object.assign(document.createElement("img"), { src: entry.info.icon, alt: "" });
     const copy = document.createElement("span"); copy.className = "wallet-option-copy";
     const name = document.createElement("strong"); name.textContent = SUPPORTED_WALLETS[entry.brand];
     const availability = document.createElement("small"); availability.textContent = "Available in this browser";
@@ -181,8 +189,13 @@ async function discoverProviders() {
   window.dispatchEvent(new Event("eip6963:requestProvider"));
   await new Promise((resolve) => setTimeout(resolve, 350));
   if (!sessionEffects.isCurrent(discoveryToken)) return;
-  const candidates = [...new Set([...(window.ethereum?.providers || []), window.ethereum, window.okxwallet, window.rabby].filter(Boolean))];
-  candidates.forEach((provider) => { const brand = legacyBrand(provider); if (brand && !providerRegistry.has(brand)) addProvider({ brand, info: { name: SUPPORTED_WALLETS[brand], uuid: `legacy-${brand}`, rdns: `legacy.${brand}`, icon: "" }, provider, legacy: true }); });
+  const injected = window.ethereum;
+  const collection = Array.isArray(injected?.providers) ? injected.providers : [];
+  const candidates = collection.map((provider) => ({ provider, source: "collection" }));
+  if (isCallableProvider(window.okxwallet)) candidates.push({ provider: window.okxwallet, source: "okxwallet" });
+  if (isCallableProvider(window.rabby)) candidates.push({ provider: window.rabby, source: "rabby" });
+  if (!collection.length && !isCallableProvider(window.okxwallet) && !isCallableProvider(window.rabby) && isCallableProvider(injected)) candidates.push({ provider: injected, source: "ethereum" });
+  candidates.forEach(({ provider, source }) => { const brand = legacyBrand(provider, source); const icon = legacyIcon(provider); if (brand && icon && !providerRegistry.has(brand)) addProvider({ brand, info: { name: SUPPORTED_WALLETS[brand], uuid: `legacy-${brand}`, rdns: `legacy.${brand}`, icon }, provider, legacy: true }); });
   commitWallet({ phase: WALLET_PHASES.CHOOSER_OPEN });
   renderProviders();
 }
