@@ -45,6 +45,7 @@ def test_wallet_chooser_uses_one_state_and_explicit_user_selection():
     assert 'error?.code !== 4902' in app
     assert 'connectSelectedProvider' in app
     assert 'state.wallet' not in app
+    assert 'wallet: getWalletState(walletStore)' not in app
     wallet_session = (ROOT / "frontend" / "wallet-session.js").read_text(encoding="utf-8")
     assert wallet_session.count('eth_requestAccounts') == 1
     assert 'eth_accounts' in wallet_session

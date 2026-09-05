@@ -28,7 +28,6 @@ const state = {
   network: DEFAULT_CONFIG.network,
   contractAddress: DEFAULT_CONFIG.contractAddress,
   readClient: null,
-  wallet: getWalletState(walletStore),
   lastCaseId: "",
 };
 const providerRegistry = createProviderRegistry();
