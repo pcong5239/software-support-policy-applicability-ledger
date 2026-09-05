@@ -4,7 +4,7 @@ This record is bound to the exact deployed source and Studionet instance below. 
 
 ## Current gate status
 
-The previously unverifiable `PD-01` remains superseded by `PD-01R`. The Studio contract and live matrix remain unchanged. The exact Vercel E2E release was repaired, redeployed once, and completed on 2026-09-05 UTC. The earlier frontend candidate `0e0c7a69e0ffbf476612b95343e930c6d24b81dd` and its blocked-platform run are superseded by frontend fix commit `cd8407a13307d549fbd5d6ef04f300fa2a097591`; anonymous re-review is required for this refreshed package.
+The previously unverifiable `PD-01` remains superseded by `PD-01R`. The Studio contract and live matrix remain unchanged. The exact Vercel E2E release was repaired, redeployed once, and completed on 2026-09-05 UTC. The earlier frontend candidate `0e0c7a69e0ffbf476612b95343e930c6d24b81dd` and its blocked-platform run are superseded by frontend fix commit `cd8407a13307d549fbd5d6ef04f300fa2a097591`; the refreshed package passed the checkpoint-specific anonymous re-review.
 
 Studio evidence mode is locked as `OBSERVABLE_ACTION_LEDGER` with retrospective timing. The retained Studio trace records five transaction-producing actions, five transactions, ten bounded status checkpoints, five terminal receipt observations, seven authoritative readbacks, zero retries and zero duplicate transactions. Physical Studio request counts are unavailable and are not claimed; the complete ledger is in `docs/RPC-BUDGET.md` and the machine-readable receipt package.
 
@@ -22,11 +22,11 @@ The frontend provider-count limitation is separately recorded under a user-appro
 - Studio account/role: `0x34b92E6553eaCA11A00A9d86d75d8a7881779D78` / `deployer`
 - Deployment status/result: `FINALIZED` / `SUCCESS`; execution mode `NORMAL`.
 - Frontend deployment configuration: `frontend/config.js` points to this exact contract address.
-- GitHub release: `https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/e055cd548ba22fb62786f410190a2f837bec5832` (inherited; current frontend fix is not pushed)
+- GitHub release: `https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/ab78268f519ce1107d64b9c1f085c9c789cca304`
 - Vercel project: `pcong/software-support-policy-applicability-ledger`
 - Vercel production URL: `https://software-support-policy-applicability-ledger-pcong.vercel.app`
 - Vercel serving root: `frontend/`; production entrypoint returned HTTP 200 and the expected application title.
-- Exact frontend release revision: `cd8407a13307d549fbd5d6ef04f300fa2a097591` (local source deployed to Vercel; not pushed).
+- Exact frontend release revision: `cd8407a13307d549fbd5d6ef04f300fa2a097591` (deployed to Vercel and present in the GitHub release history).
 - Exact frontend artifact SHA-256: `app.js` `33CAAC4633C68CB9066BDCBB3D202B885BD43CEDDA2E1EB7F409032A130D5D9C`; `wallet-session.js` `A63B7FF7474D0881B45CFED2DDF58E5AFF0243F672EA4AF34D033F0CCAE9C8B7`; `rpc-observer.js` `76F7B835B097F6252273EE4E4F111E182158459786925B4336C1661FC714F92F`; `tests/wallet_session.test.js` `14E30C0543EC1987047BE027AF4766A82A3926874F9DF3C7BA970FA8C977065A`; `index.html` `34F1153BB749910B6CE833CC7E2DD3E2F92FD32C7783B5218E793BE7DA17281B`; `styles.css` `D2F17465893A56EA7A71CF3983B7B85D76E271D84149319ECBEC29850DFD0570`; `tokens.css` `80E5B33CB4C974E3C68ED7D9BA1F926CBA9BB023FCED3E8D302D08C38D889749`.
 
 ## Live transaction matrix
@@ -106,10 +106,10 @@ This plan is for the production URL above, exact frontend release commit `cd8407
 
 ### Terminal criteria
 
-The plan is `COMPLETE` for this exact release: the critical journey and bounded sweep passed, every required write has finality plus semantic execution success plus authoritative readback, the public phase indicator matched observations, and physical frontend RPC evidence is recorded. This does not claim `POST_GITHUB_VERCEL_FINAL`; the current frontend fix remains unpushed and requires the checkpoint-specific anonymous re-review before release progression.
+The plan is `COMPLETE` for this exact release: the critical journey and bounded sweep passed, every required write has finality plus semantic execution success plus authoritative readback, the public phase indicator matched observations, and the approved frontend alternative evidence plan is recorded. This record does not itself claim `POST_GITHUB_VERCEL_FINAL`; final release progression still requires the checkpoint-specific final review.
 
 ## Receipt observations
 
 - Live receipts showed the full consensus lifecycle `PENDING → PROPOSING → COMMITTING → REVEALING → ACCEPTED → FINALIZED`.
 - Validator execution cancellations after quorum were observed on some receipts; the transaction result remained `SUCCESS` and consensus/finality were authoritative.
-- No contract source change, contract upgrade or additional Studio transaction occurred during the frontend repair/redeploy. GitHub identity is inherited as recorded above; the current frontend revision was deployed only to the locked Vercel project. Browser E2E is complete only for the exact release identity recorded above.
+- No contract source change, contract upgrade or additional Studio transaction occurred during the frontend repair/redeploy. The frontend revision was deployed to the locked Vercel project and is included in the GitHub release history. Browser E2E is complete only for the exact release identity recorded above.

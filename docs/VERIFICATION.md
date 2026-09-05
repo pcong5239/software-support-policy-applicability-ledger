@@ -10,7 +10,7 @@
 - Vercel project: `pcong/software-support-policy-applicability-ledger`
 - Vercel production URL: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app)
 - Vercel exact candidate deployment: `READY`, deployment ID `dpl_5UbN4mNaV2XrucSnXaTzQLGcoP9Z`, serving the `frontend/` static root at the stable production alias; exact deployment URL `https://software-support-policy-applicability-ledger-iiavxdlr7-pcong.vercel.app`.
-- GitHub commit: [`e055cd548ba22fb62786f410190a2f837bec5832`](https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/e055cd548ba22fb62786f410190a2f837bec5832)
+- GitHub commit: [`ab78268f519ce1107d64b9c1f085c9c789cca304`](https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/ab78268f519ce1107d64b9c1f085c9c789cca304)
 
 ## Local checks
 
@@ -39,4 +39,4 @@ The deployed contract source matches the SHA-256 above. The four fresh live rows
 
 ## Scope and limitations
 
-The current release batch changes only the frontend readback assertion, the evidence-only RPC observer and their regression/evidence records. Contract bytes, deployed address, deployment transaction, and Studio live evidence are unchanged. The observer captures page HTTP RPC metadata without payloads; the OKX extension request method was non-writable and is disclosed as a provider-capture limitation, with provider behavior covered by executable wallet-session tests. The current frontend fix is not pushed to GitHub; `POST_GITHUB_VERCEL_FINAL` and final release approval are not claimed.
+The current release batch changes only the frontend readback assertion, the evidence-only RPC observer and their regression/evidence records. Contract bytes, deployed address, deployment transaction, and Studio live evidence are unchanged. The observer captures page HTTP RPC metadata without payloads; the OKX extension request method was non-writable and is disclosed as a provider-capture limitation, with provider behavior covered by executable wallet-session tests. The frontend release is now published in the verified GitHub repository; `POST_GITHUB_VERCEL_FINAL` and final release approval are not claimed by this checkpoint record.
