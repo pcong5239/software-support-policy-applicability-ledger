@@ -60,7 +60,7 @@ The old `live-20260901-01` case and its non-reproducible PD-01 receipt remain su
 
 ## Vercel E2E plan
 
-This plan is for the production URL above after it is updated to exact frontend candidate commit `0e0c7a69e0ffbf476612b95343e930c6d24b81dd`. It is a browser acceptance run, not a substitute for the contract matrix. The test wallet must be a separate supported wallet account and must not be the Studio deployer account.
+This plan is for the production URL above, now updated to exact frontend candidate commit `0e0c7a69e0ffbf476612b95343e930c6d24b81dd` in deployment `dpl_DeeZFKg7TjiQcpg2ZaMS918VtHVC`. It is a browser acceptance run, not a substitute for the contract matrix. The test wallet must be a separate supported wallet account and must not be the Studio deployer account.
 
 ### Initial state and actor boundary
 
@@ -85,9 +85,17 @@ This plan is for the production URL above after it is updated to exact frontend 
 - Sweep the shared risk surface after the first complete journey: disconnected reload, provider cardinality/deduplication, chooser Escape/focus/close behavior, wrong-network/account/disconnect handling, invalid form inputs, wallet rejection without a transaction, retained-hash/reconciliation controls, reload/reconnect, desktop and 360px layout, accessible live status, console errors and visible technical leakage.
 - If any defect appears, preserve the exact evidence, finish only safe bounded checks, batch shared root causes, run the affected automated tests, deploy once for that batch, and rerun all failed/affected cases on the new exact release. Do not create a replacement transaction for an ambiguous write.
 
+### Exact-release execution record
+
+- State: `BLOCKED_PLATFORM`.
+- Exact deployment: `dpl_DeeZFKg7TjiQcpg2ZaMS918VtHVC`, stable production alias, `READY`.
+- PASS observations: clean load and reload start disconnected; Studionet and the deployed contract address are visible; one live `OKX Wallet` option is detected with no fake options; chooser Cancel and Escape restore the disconnected state; public instructions and technical-language prohibitions remain satisfied; browser console logs contain zero warnings/errors.
+- Blocking observation: two explicit selections of the detected OKX option both produce `The wallet request was cancelled. Choose a wallet and try again.` No popup/tab appeared, no account was returned, no write was submitted, and no transaction hash/finality/readback exists. After rejection, a read-only provider-presence check found `window.ethereum`, `window.okxwallet`, and `window.rabby` unavailable in the page context.
+- Classification: verified external browser-wallet availability/rejection block, not an application defect. No source repair or redeploy was authorized by this observation; the exact tab/session is preserved for recovery when a callable external wallet can complete the explicit signature step.
+
 ### Terminal criteria
 
-The plan is `COMPLETE` only when the critical journey and bounded sweep pass on the exact production release, every required write has finality plus semantic execution success plus authoritative readback, the public phase indicator matches observations, and the frontend RPC evidence is complete. Otherwise record `FAIL` or a verified `BLOCKED_PLATFORM` with the exact evidence and preserve the session for recovery.
+The plan is `COMPLETE` only when the critical journey and bounded sweep pass on the exact production release, every required write has finality plus semantic execution success plus authoritative readback, the public phase indicator matches observations, and the frontend RPC evidence is complete. The current run is a verified `BLOCKED_PLATFORM`; `POST_GITHUB_VERCEL_FINAL` and final release approval are not claimed.
 
 ## Receipt observations
 

@@ -81,7 +81,7 @@ The release is deployed on Studionet (chain ID `61999`) at `0x97375A261D51ec8B90
 
 - The current release uses the pinned compatibility client `genlayer-js@1.1.8`; its legacy receipt helper is retained while feature-detecting the current `waitForFinalization` lifecycle when available. The version boundary is documented in the RPC budget record.
 - A public HTTPS policy endpoint must return the bounded JSON shape described by the contract; unavailable, malformed, oversized, or contradictory policy evidence fails closed to an unresolved/unclear outcome.
-- The production application is available at the verified URL above; browser E2E and measured frontend RPC evidence remain pending until the exact final release completes that gate.
+- The production application is available at the verified URL above; the exact candidate is deployed, but browser E2E and measured frontend RPC evidence are currently blocked by the Chrome wallet provider rejecting the explicit connection without opening a signing popup.
 
 ## Repository layout
 
