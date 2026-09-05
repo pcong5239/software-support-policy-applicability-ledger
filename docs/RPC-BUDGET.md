@@ -77,16 +77,16 @@ FRONTEND_SCOPE: APPLICABLE
 
 ## FRONTEND EVIDENCE-PLAN ADJUSTMENT
 
-FRONTEND_EVIDENCE_PLAN_ADJUSTMENT_STATUS: REQUESTED_ANONYMOUS_REVIEW
+FRONTEND_EVIDENCE_PLAN_ADJUSTMENT_STATUS: APPROVED_BY_USER
 FRONTEND_PROVIDER_MEASUREMENT_STATUS: NOT_OBSERVABLE_ON_EXACT_RELEASE
 FRONTEND_PROVIDER_MEASUREMENT_SCOPE: `eth_requestAccounts`, `eth_accounts`, `eth_chainId`, and any `wallet_switchEthereumChain`/`wallet_addEthereumChain` call actually invoked
 FRONTEND_PROVIDER_MEASUREMENT_SOURCE: Exact Vercel page observer plus retained Chrome capability probe; provider request property was non-writable and Chrome exposed no Network/CDP/performance request stream
 FRONTEND_ALTERNATIVE_EVIDENCE: Exact-release page HTTP RPC counts and lifecycle markers; exact-release wallet journey/readback; executable wallet-session call-path and state-machine regressions; explicit provider limitation and no inferred physical counts
 FRONTEND_ADJUSTMENT_NO_REPLAY: YES
 FRONTEND_ADJUSTMENT_NO_REDEPLOY: YES
-FRONTEND_ADJUSTMENT_APPROVAL: PENDING SAME ANONYMOUS POST_DEPLOY_TEST REVIEW
+FRONTEND_ADJUSTMENT_APPROVAL: USER_APPROVED_IN_TASK_2026-09-06
 
-This is a proposed evidence-plan adjustment for the reviewer to decide under the current frontend RPC gate. It does not convert executable tests into exact-release physical counts and does not claim the provider calls were observed.
+This evidence-plan adjustment was approved by the user for the current frontend RPC gate. It does not convert executable tests into exact-release physical counts and does not claim the provider calls were observed.
 
 ### FRONTEND RPC BUDGET MATRIX
 
@@ -113,4 +113,4 @@ This is a proposed evidence-plan adjustment for the reviewer to decide under the
 - Physical browser RPC evidence: clean load logged one `client:created` marker and `0` GenLayer HTTP requests; provider discovery made `0` account requests until explicit option click. Each register/freeze/assess action emitted exactly `1 eth_getTransactionCount + 1 eth_estimateGas + 1 eth_gasPrice + 11 eth_getTransactionByHash + 1 gen_call`, for `15` HTTP RPC requests per write and one transaction. The 10 status intervals were register `3482–3873 ms`, freeze `3479–3925 ms`, and assess `3723–3894 ms`; no automatic retry or duplicate submission occurred. Explicit reload/reconnect readback emitted exactly `1 gen_call`; copy/Explorer controls emitted `0` GenLayer RPC calls. Console log inspection returned no warnings/errors.
 - Provider capture limitation: the OKX extension provider's request function was non-writable in this session, so `eth_requestAccounts`, `eth_accounts`, and `eth_chainId` were not wire-counted by the observer. The canonical wallet-session regression suite covers those provider methods and the live flow completed with the separate external OKX account on Studionet.
 - FRONTEND_MATRIX_STATUS: COMPLETE
-- FRONTEND_EVIDENCE_STATUS: COMPLETE_PHYSICAL_FETCH_LEDGER (provider-extension method capture limitation disclosed above)
+- FRONTEND_EVIDENCE_STATUS: COMPLETE_WITH_USER_APPROVED_EVIDENCE_PLAN_ADJUSTMENT (provider-extension method capture limitation disclosed above)
