@@ -4,13 +4,13 @@ This record is bound to the exact deployed source and Studionet instance below. 
 
 ## Current gate status
 
-Fresh replacement matrix recorded after explicit user authorization on 2026-09-01. The previously unverifiable `PD-01` is superseded by `PD-01R`. The Studio contract and live matrix remain unchanged. The refreshed Vercel E2E plan is bound to frontend candidate commit `0e0c7a69e0ffbf476612b95343e930c6d24b81dd`; only frontend source, presentation tokens and frontend tests changed after the prior checkpoint.
+The previously unverifiable `PD-01` remains superseded by `PD-01R`. The Studio contract and live matrix remain unchanged. The exact Vercel E2E release was repaired, redeployed once, and completed on 2026-09-05 UTC. The earlier frontend candidate `0e0c7a69e0ffbf476612b95343e930c6d24b81dd` and its blocked-platform run are superseded by frontend fix commit `03ae2fb704393c4380f8566f79ce268ff69e6c88`; anonymous re-review is required for this refreshed package.
 
 ## Identity and deployment
 
 - Project: Software Support Policy Applicability Ledger
 - Network: Studionet; chain ID `61999`
-- Source commit: `c53f6156e0bf8ff2f86339df5677e2149bd5c48b`
+- Source commit (contract/deployment identity): `c53f6156e0bf8ff2f86339df5677e2149bd5c48b`
 - Source SHA-256: `314824D86E3CFF276E885E930F619717449D76D6AA5B8D364F4F37C41C4E6E8B`
 - Contract: `0x97375A261D51ec8B90D4DE44eD5Ea4711a598355`
 - Deployment transaction: `0xda771a514a82cdbb214dc1864f6ee7479bcf8929a8763f65eb8839512d0ba6b5`
@@ -18,12 +18,12 @@ Fresh replacement matrix recorded after explicit user authorization on 2026-09-0
 - Studio account/role: `0x34b92E6553eaCA11A00A9d86d75d8a7881779D78` / `deployer`
 - Deployment status/result: `FINALIZED` / `SUCCESS`; execution mode `NORMAL`.
 - Frontend deployment configuration: `frontend/config.js` points to this exact contract address.
-- GitHub release: `https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/e055cd548ba22fb62786f410190a2f837bec5832`
+- GitHub release: `https://github.com/pcong5239/software-support-policy-applicability-ledger/commit/e055cd548ba22fb62786f410190a2f837bec5832` (inherited; current frontend fix is not pushed)
 - Vercel project: `pcong/software-support-policy-applicability-ledger`
 - Vercel production URL: `https://software-support-policy-applicability-ledger-pcong.vercel.app`
 - Vercel serving root: `frontend/`; production entrypoint returned HTTP 200 and the expected application title.
-- Frontend candidate revision: `0e0c7a69e0ffbf476612b95343e930c6d24b81dd` (local exact source; not pushed or deployed at this checkpoint).
-- Candidate artifact SHA-256: `app.js` `ED4BEC32EF86C68ABC3D4CE3B46F057390B91A8828C53180CFF8BB4E52D3D321`; `wallet-session.js` `3E88124C4C765800EB41A71A84FEE98C440D252E5930B762578C503A809FFE6B`; `tests/wallet_session.test.js` `14E30C0543EC1987047BE027AF4766A82A3926874F9DF3C7BA970FA8C977065A`; `index.html` `34F1153BB749910B6CE833CC7E2DD3E2F92FD32C7783B5218E793BE7DA17281B`; `styles.css` `A255AF3F84411A461F6C681A8E333820907340B46A568F965A01423D95CEC913`; `tokens.css` `80E5B33CB4C974E3C68ED7D9BA1F926CBA9BB023FCED3E8D302D08C38D889749`.
+- Exact frontend release revision: `03ae2fb704393c4380f8566f79ce268ff69e6c88` (local source deployed to Vercel; not pushed).
+- Exact frontend artifact SHA-256: `app.js` `7D474F7157044A6BBBE33547C3C24A1DADF1FCE4B997DF7C046840654EA42AA1`; `wallet-session.js` `3E88124C4C765800EB41A71A84FEE98C440D252E5930B762578C503A809FFE6B`; `tests/wallet_session.test.js` `14E30C0543EC1987047BE027AF4766A82A3926874F9DF3C7BA970FA8C977065A`; `index.html` `34F1153BB749910B6CE833CC7E2DD3E2F92FD32C7783B5218E793BE7DA17281B`; `styles.css` `D2F17465893A56EA7A71CF3983B7B85D76E271D84149319ECBEC29850DFD0570`; `tokens.css` `80E5B33CB4C974E3C68ED7D9BA1F926CBA9BB023FCED3E8D302D08C38D889749`.
 
 ## Live transaction matrix
 
@@ -60,7 +60,7 @@ The old `live-20260901-01` case and its non-reproducible PD-01 receipt remain su
 
 ## Vercel E2E plan
 
-This plan is for the production URL above, now updated to exact frontend candidate commit `0e0c7a69e0ffbf476612b95343e930c6d24b81dd` in deployment `dpl_DeeZFKg7TjiQcpg2ZaMS918VtHVC`. It is a browser acceptance run, not a substitute for the contract matrix. The test wallet must be a separate supported wallet account and must not be the Studio deployer account.
+This plan is for the production URL above, exact frontend release commit `03ae2fb704393c4380f8566f79ce268ff69e6c88`, and deployment `dpl_56S4bbjwbQa4Qu21jyCewUFd32x9`. The deployment URL was `https://software-support-policy-applicability-ledger-2e6t3lwky-pcong.vercel.app`; the project production alias is `https://software-support-policy-applicability-ledger-pcong.vercel.app`. It is a browser acceptance run, not a substitute for the contract matrix. The test wallet was a separate external OKX Wallet account and was not the Studio deployer account.
 
 ### Initial state and actor boundary
 
@@ -87,18 +87,24 @@ This plan is for the production URL above, now updated to exact frontend candida
 
 ### Exact-release execution record
 
-- State: `BLOCKED_PLATFORM`.
-- Exact deployment: `dpl_DeeZFKg7TjiQcpg2ZaMS918VtHVC`, stable production alias, `READY`.
-- PASS observations: clean load and reload start disconnected; Studionet and the deployed contract address are visible; one live `OKX Wallet` option is detected with no fake options; chooser Cancel and Escape restore the disconnected state; public instructions and technical-language prohibitions remain satisfied; browser console logs contain zero warnings/errors.
-- Blocking observation: two explicit selections of the detected OKX option both produce `The wallet request was cancelled. Choose a wallet and try again.` No popup/tab appeared, no account was returned, no write was submitted, and no transaction hash/finality/readback exists. After rejection, a read-only provider-presence check found `window.ethereum`, `window.okxwallet`, and `window.rabby` unavailable in the page context.
-- Classification: verified external browser-wallet availability/rejection block, not an application defect. No source repair or redeploy was authorized by this observation; the exact tab/session is preserved for recovery when a callable external wallet can complete the explicit signature step.
+- State: `COMPLETE` for the critical journey and bounded sweep.
+- Exact deployment: `dpl_56S4bbjwbQa4Qu21jyCewUFd32x9`, `READY`; exact deployment URL and stable project alias are recorded above.
+- Clean-load PASS: page opened in the existing Chrome tab at the exact deployment; initial state was disconnected; Studionet and the deployed contract address were visible; the chooser exposed one real `OKX Wallet` option and no fake MetaMask option; no account request occurred merely from opening the chooser.
+- Critical journey PASS: external OKX Wallet account `0x5d59…86e0` connected on Studionet. Unique case `e2e-20260905-03ae2fb` used `support-agent`, `1.0.0`, `standard`, `global`, and `https://example.com/`.
+- Register PASS: hash `0x19fa2cff93641e4988d3cb626d9d0fba93a2742bdbc109114854d352fecfa36d`; UI reached transaction complete with visible hash and `DRAFT` readback; canonical receipt was `FINALIZED`, `MAJORITY_AGREE`, status `0x1`, matching transaction hash.
+- Freeze PASS: hash `0x63049d946b36418d66effb6fd80b07afbf88d91eb6f0a95e740c829f0660d84f`; UI reached transaction complete with authoritative `FROZEN` readback; canonical receipt was `FINALIZED`, `MAJORITY_AGREE`, status `0x1`, matching transaction hash.
+- Assess PASS: hash `0x08218b0a57b65993c8ea212d668f83ec93ff4856e2d1fdf1f2ce50edeeefa8d6`; UI reached transaction complete with `ASSESSED`, `POLICY_SCOPE_UNCLEAR`, observed date `2026-09-05`, retry count `0`; canonical receipt was `FINALIZED`, `MAJORITY_AGREE`, status `0x1`, matching transaction hash.
+- Reload/reconnect/readback PASS: reloaded the same deployment in the same tab, explicitly reconnected the same external wallet, entered only the case ID, and loaded the on-chain result showing `ASSESSED / POLICY_SCOPE_UNCLEAR` with the original case fields.
+- Safe sweep PASS: disconnect restored `Not connected` and cleared readback; chooser Cancel and Escape both returned to stable disconnected state; native invalid-URL validation blocked submission before any transaction; the public rendered text contained no EIP-6963, provider-object, RPC, chain-ID, debug, test-state, injected-provider or wallet-routing language; browser console logs were empty; responsive breakpoints and `prefers-reduced-motion` are present in the final CSS.
+- Evidence boundary: the current Node REPL browser client exposes no CDP request/resource-count API and its page context exposes no `performance` object. The frontend RPC record therefore reports bounded logical call maxima from the single-client/single-write implementation and browser lifecycle observations, not an invented wire-level method count.
+- Superseded evidence: the prior `BLOCKED_PLATFORM` run on deployment `dpl_DeeZFKg7TjiQcpg2ZaMS918VtHVC` and the pre-fix failed readback run are retained only as history; they do not qualify as evidence for this exact release.
 
 ### Terminal criteria
 
-The plan is `COMPLETE` only when the critical journey and bounded sweep pass on the exact production release, every required write has finality plus semantic execution success plus authoritative readback, the public phase indicator matches observations, and the frontend RPC evidence is complete. The current run is a verified `BLOCKED_PLATFORM`; `POST_GITHUB_VERCEL_FINAL` and final release approval are not claimed.
+The plan is `COMPLETE` for this exact release: the critical journey and bounded sweep passed, every required write has finality plus semantic execution success plus authoritative readback, the public phase indicator matched observations, and the bounded frontend RPC ledger is recorded. This does not claim `POST_GITHUB_VERCEL_FINAL`; the current frontend fix remains unpushed and requires the checkpoint-specific anonymous re-review before release progression.
 
 ## Receipt observations
 
 - Live receipts showed the full consensus lifecycle `PENDING → PROPOSING → COMMITTING → REVEALING → ACCEPTED → FINALIZED`.
 - Validator execution cancellations after quorum were observed on some receipts; the transaction result remained `SUCCESS` and consensus/finality were authoritative.
-- No contract source change, contract upgrade or additional Studio transaction occurred during the frontend release; GitHub and Vercel release identity are recorded above. Browser E2E remains unclaimed until the plan completes.
+- No contract source change, contract upgrade or additional Studio transaction occurred during the frontend repair/redeploy. GitHub identity is inherited as recorded above; the current frontend revision was deployed only to the locked Vercel project. Browser E2E is complete only for the exact release identity recorded above.

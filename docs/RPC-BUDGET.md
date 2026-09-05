@@ -1,9 +1,9 @@
 # RPC Budget Record
 
-RPC_BUDGET_REVISION: contract c53f6156e0bf8ff2f86339df5677e2149bd5c48b; frontend candidate commit 0e0c7a69e0ffbf476612b95343e930c6d24b81dd
+RPC_BUDGET_REVISION: contract c53f6156e0bf8ff2f86339df5677e2149bd5c48b; frontend release commit 03ae2fb704393c4380f8566f79ce268ff69e6c88; Vercel deployment dpl_56S4bbjwbQa4Qu21jyCewUFd32x9
 OFFICIAL_DOCS_CHECKED: https://docs.genlayer.com/api-references/genlayer-js and https://docs.genlayer.com/api-references/genlayer-node/gen/gen_getTransactionStatus; checked 2026-09-05 UTC
 
-The Studio and frontend scopes are measured separately. Studio evidence is inherited from the approved deployed package because this release batch does not change contract bytes, ABI, address, network, or Studio transactions. The exact Vercel production URL is deployed and serves the frontend; browser transaction measurements remain pending the controlled E2E run.
+The Studio and frontend scopes are measured separately. Studio evidence is inherited from the approved deployed package because this release batch does not change contract bytes, ABI, address, network, or Studio transactions. The exact Vercel release completed the controlled E2E run in the existing Chrome session. The browser client did not expose CDP request/resource-count methods and its page context did not expose `performance`; the frontend record below therefore uses bounded logical call maxima and observable lifecycle evidence, without inventing wire-level method totals.
 
 ## STUDIO_SCOPE
 
@@ -58,6 +58,7 @@ FRONTEND_SCOPE: APPLICABLE
 - The coordinator emits `WAITING_FOR_WALLET`, `SUBMITTED`, `WAITING_FOR_FINALITY`, `VERIFYING_EXECUTION`, `VERIFYING_READBACK`, and terminal phases from actual promise/lifecycle outcomes.
 - A valid hash is persisted before verification; readback uncertainty becomes `RECONCILIATION_REQUIRED`, and no automatic write retry exists.
 - Local integrated-browser review verified the disconnected initial state, native chooser focus, zero-wallet cardinality without fake options, no account request on chooser open, complete public instructions, and no visible technical leakage. Executable wallet-session regressions cover canonical provider updates, conflicting-identity preservation, non-callable provider rejection, wrong-chain account changes, stale-session invalidation, listener teardown, and disconnect. Automated checks report `21 passed`.
-- Vercel production: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app), exact candidate deployment `dpl_DeeZFKg7TjiQcpg2ZaMS918VtHVC`, `READY`, HTTP 200 for the application entrypoint from the `frontend/` static root. Initial/reload/chooser/reset checks passed. The wallet journey is `BLOCKED_PLATFORM` after two explicit OKX connection rejections without a popup; no account, write, transaction hash, finality, readback or complete browser call measurement exists.
+- Vercel production: [`software-support-policy-applicability-ledger-pcong.vercel.app`](https://software-support-policy-applicability-ledger-pcong.vercel.app), exact deployment `dpl_56S4bbjwbQa4Qu21jyCewUFd32x9`, `READY`, HTTP 200 for the application entrypoint from the `frontend/` static root. The exact browser run used case `e2e-20260905-03ae2fb`, external OKX Wallet, three finalized writes, reload/reconnect/readback, and the bounded safety sweep; full hashes and canonical receipts are in `verification/POST-DEPLOY-TEST.md` and `verification/studionet-receipts.json`.
+- Browser RPC observable ledger: initial load `0` contract reads; provider discovery `0` account requests until explicit option click; wallet connection bounded to `1 eth_requestAccounts + 1 eth_accounts + 1 eth_chainId` with no add/switch path observed; each register/freeze/assess action `1 writeContract + 1 bounded finality wait + 1 deliberate get_case readback`; no automatic retry or duplicate submission; copy/Explorer controls `0` RPC calls. Console log inspection returned zero warnings/errors.
 - FRONTEND_MATRIX_STATUS: COMPLETE
-- FRONTEND_EVIDENCE_STATUS: BLOCKED_PLATFORM_WALLET_UNAVAILABLE
+- FRONTEND_EVIDENCE_STATUS: COMPLETE_BOUNDED_LOGICAL_LEDGER (wire-level request counts unavailable from the current browser client)
