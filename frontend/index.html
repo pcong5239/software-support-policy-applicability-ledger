@@ -3,77 +3,329 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Auditable software support policy applicability ledger" />
-    <title>Support Policy Ledger</title>
+    <meta name="description" content="Software Support Policy Applicability Ledger — Verified, consensus-backed software support decisions on GenLayer." />
+    <title>Software Support Policy Applicability Ledger</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <header class="topbar">
-      <a class="wordmark" href="./">Support Policy <span>Ledger</span></a>
-      <div class="network-pill"><span class="dot" aria-hidden="true"></span><span id="network-label">Not connected</span></div>
+      <div class="topbar-inner">
+        <a class="wordmark" href="./" aria-label="Software Support Policy Applicability Ledger Home">
+          <svg class="brand-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="24" height="24" rx="6" class="brand-bg" />
+            <path d="M7 8.5H21M7 14H16M7 19.5H13" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" />
+            <circle cx="19.5" cy="17.5" r="3.5" class="brand-accent-circle" />
+            <path d="M18.25 17.5L19.25 18.5L21 16.5" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="brand-title">Support Policy <span class="brand-accent">Ledger</span></span>
+        </a>
+
+        <div class="topbar-meta">
+          <div class="network-pill" aria-live="polite">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="network-prefix">Network:</span>
+            <span id="network-label">Not connected</span>
+          </div>
+        </div>
+      </div>
     </header>
 
-    <main class="shell">
-      <section class="hero">
-        <p class="eyebrow">GENLAYER / EVIDENCE REGISTER</p>
-        <h1>Does this product remain supported?</h1>
-        <p class="lede">Freeze the exact product facts, assess them against the publisher policy, and read back a consensus-backed outcome with its evidence digest.</p>
+    <main id="main-content" class="shell">
+      <header class="hero">
+        <div class="hero-badge">
+          <span class="badge-dot" aria-hidden="true"></span>
+          <span>Consensus-Backed Verification Ledger</span>
+        </div>
+        <h1>Does this software release remain supported?</h1>
+        <p class="lede">
+          Register immutable product facts, freeze the audit record, evaluate against the publisher support policy, and verify consensus-backed applicability with cryptographic evidence digests.
+        </p>
+
+        <div class="trust-bar">
+          <div class="trust-item">
+            <span class="trust-icon" aria-hidden="true">✓</span>
+            <span>Immutable Case Freeze</span>
+          </div>
+          <div class="trust-divider" aria-hidden="true">/</div>
+          <div class="trust-item">
+            <span class="trust-icon" aria-hidden="true">◷</span>
+            <span>Deterministic Policy Assessment</span>
+          </div>
+          <div class="trust-divider" aria-hidden="true">/</div>
+          <div class="trust-item">
+            <span class="trust-icon" aria-hidden="true">≡</span>
+            <span>On-Chain Readback Digest</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="how-it-works" aria-labelledby="how-it-works-title">
+        <div>
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-it-works-title">From release facts to a verified support decision</h2>
+        </div>
+        <p>Enter the release coordinates, lock the case, assess the publisher policy for a date, then review the stored decision and evidence digest.</p>
       </section>
 
+      <!-- Step 01: Setup & Connection -->
       <section class="setup card" aria-labelledby="setup-title">
         <div class="section-heading">
-          <div><p class="eyebrow">01 / CONNECT</p><h2 id="setup-title">Choose the network and wallet</h2></div>
-          <span id="connection-state" class="state-chip">Setup required</span>
-        </div>
-        <div class="form-grid setup-grid">
-          <label>Network<select id="network-select"><option value="studionet">Studionet</option><option value="testnetBradbury">Testnet Bradbury</option><option value="localnet">Localnet</option></select></label>
-          <label>Contract address<input id="contract-address" inputmode="text" placeholder="0x…" autocomplete="off" /></label>
-          <label>Wallet provider<select id="provider-select"><option value="">Discovering providers…</option></select></label>
-        </div>
-        <div class="action-row"><button id="connect-button" class="button primary">Connect wallet</button><span id="account-label" class="muted">No account selected.</span></div>
-      </section>
-
-      <section class="workspace">
-        <div class="card case-card">
-          <div class="section-heading"><div><p class="eyebrow">02 / REGISTER</p><h2>Freeze a case</h2></div><span class="step-number">A</span></div>
-          <p class="helper">Registration stores only the exact facts you enter. Freeze before any policy assessment.</p>
-          <form id="register-form" class="form-grid">
-            <label>Case ID<input id="case-id" required maxlength="256" placeholder="acme-2026-q2" /></label>
-            <label>Product ID<input id="product-id" required maxlength="256" placeholder="acme-suite" /></label>
-            <label>Version<input id="version" required maxlength="32" placeholder="1.2.3" /></label>
-            <label>Edition<input id="edition" required maxlength="256" placeholder="enterprise" /></label>
-            <label>Region<input id="region" required maxlength="256" placeholder="eu" /></label>
-            <label class="wide">Policy URL<input id="policy-url" required type="url" placeholder="https://vendor.example/support.json" /></label>
-            <div class="action-row wide"><button class="button primary" type="submit">Register case</button><button class="button secondary" id="freeze-button" type="button" disabled>Freeze case</button></div>
-          </form>
-        </div>
-
-        <div class="card assess-card">
-          <div class="section-heading"><div><p class="eyebrow">03 / ASSESS</p><h2>Ask for a decision</h2></div><span class="step-number">B</span></div>
-          <p class="helper">The contract fetches the policy as untrusted evidence, lets validators rederive the consequence, and stores the result.</p>
-          <div class="form-grid">
-            <label>Observed date<input id="observed-date" type="date" required /></label>
-            <div class="action-row align-end"><button class="button primary" id="assess-button" type="button" disabled>Assess frozen case</button></div>
+          <div class="heading-group">
+            <p class="eyebrow">Step 01 / Connection</p>
+            <h2 id="setup-title">Network &amp; Wallet</h2>
           </div>
-          <div class="progress-rail" aria-label="Assessment workflow"><span class="active">Registered</span><span>Frozen</span><span>Assessed</span><span>Read back</span></div>
+          <span id="connection-state" class="state-chip" aria-live="polite">Setup required</span>
+        </div>
+
+        <div class="form-grid setup-grid">
+          <div class="field">
+            <label for="network-select">Target Network</label>
+            <div class="select-wrapper">
+              <select id="network-select" aria-describedby="network-hint">
+                <option value="studionet">Studionet</option>
+              </select>
+            </div>
+            <span id="network-hint" class="field-hint">Select the network for this ledger.</span>
+          </div>
+
+          <div class="field">
+            <label for="contract-address">Contract Address</label>
+            <input id="contract-address" class="font-mono" inputmode="text" placeholder="0x…" autocomplete="off" spellcheck="false" aria-describedby="address-hint" />
+            <span id="address-hint" class="field-hint">Contract address for this ledger.</span>
+          </div>
+
+          <div class="field">
+            <label for="provider-select">Wallet</label>
+            <div class="select-wrapper">
+              <select id="provider-select" aria-describedby="provider-hint">
+                <option value="">Discovering providers…</option>
+              </select>
+            </div>
+            <span id="provider-hint" class="field-hint">Choose a wallet to connect.</span>
+          </div>
+        </div>
+
+        <div class="action-row setup-actions">
+          <button id="connect-button" class="button primary" type="button">Connect wallet</button>
+          <div class="account-badge">
+            <span class="account-badge-dot" aria-hidden="true"></span>
+            <span id="account-label" class="muted">No account selected.</span>
+          </div>
         </div>
       </section>
 
-      <section class="card result-card" aria-live="polite">
-        <div class="section-heading"><div><p class="eyebrow">04 / READBACK</p><h2>Contract state</h2></div><button id="refresh-button" class="text-button" type="button">Refresh</button></div>
-        <div id="empty-result" class="empty-state">Register or search a case to inspect its authoritative state.</div>
+      <!-- Two-column workspace -->
+      <div class="workspace">
+        <!-- Step 02: Register & Freeze -->
+        <section class="card case-card" aria-labelledby="register-title">
+          <div class="section-heading">
+            <div class="heading-group">
+              <p class="eyebrow">Step 02 / Register &amp; Freeze</p>
+              <h2 id="register-title">Software Release Facts</h2>
+            </div>
+            <span class="step-badge" aria-label="Step 2A">2A</span>
+          </div>
+          <p class="helper">
+            Registration commits the exact release coordinates. Once verified, freeze the case to permanently lock the evidence before assessment.
+          </p>
+
+          <form id="register-form" class="form-grid">
+            <div class="field">
+              <label for="case-id">Case Identifier</label>
+              <input id="case-id" class="font-mono" required maxlength="256" placeholder="acme-2026-q2" autocomplete="off" />
+              <span class="field-hint">Unique audit case key.</span>
+            </div>
+
+            <div class="field">
+              <label for="product-id">Product Identifier</label>
+              <input id="product-id" required maxlength="256" placeholder="acme-suite" autocomplete="off" />
+              <span class="field-hint">Publisher software product ID.</span>
+            </div>
+
+            <div class="field">
+              <label for="version">Release Version</label>
+              <input id="version" class="font-mono" required maxlength="32" placeholder="1.2.3" autocomplete="off" />
+              <span class="field-hint">SemVer or release identifier.</span>
+            </div>
+
+            <div class="field">
+              <label for="edition">Product Edition</label>
+              <input id="edition" required maxlength="256" placeholder="enterprise" autocomplete="off" />
+              <span class="field-hint">e.g. enterprise, community, standard.</span>
+            </div>
+
+            <div class="field">
+              <label for="region">Applicable Region</label>
+              <input id="region" required maxlength="256" placeholder="eu" autocomplete="off" />
+              <span class="field-hint">e.g. global, eu, us, apac.</span>
+            </div>
+
+            <div class="field">
+              <label for="policy-url">Policy Document Source URL</label>
+              <input id="policy-url" required type="url" placeholder="https://vendor.example/support.json" autocomplete="off" />
+              <span class="field-hint">Public HTTPS endpoint with publisher policy.</span>
+            </div>
+
+            <div class="action-row wide">
+              <button class="button primary" type="submit">Register case</button>
+              <button class="button secondary" id="freeze-button" type="button" disabled>Freeze case</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Step 03: Assess -->
+        <section class="card assess-card" aria-labelledby="assess-title">
+          <div class="section-heading">
+            <div class="heading-group">
+              <p class="eyebrow">Step 03 / Evaluate</p>
+              <h2 id="assess-title">Policy Applicability</h2>
+            </div>
+            <span class="step-badge" aria-label="Step 2B">2B</span>
+          </div>
+          <p class="helper">
+            The intelligent contract retrieves the publisher policy as untrusted evidence, derives the support window deterministically, and records consensus.
+          </p>
+
+          <div class="form-grid">
+            <div class="field wide">
+              <label for="observed-date">Observation Assessment Date</label>
+              <input id="observed-date" type="date" required />
+              <span class="field-hint">Date at which applicability is queried.</span>
+            </div>
+
+            <div class="action-row wide">
+              <button class="button primary button-block" id="assess-button" type="button" disabled>Assess frozen case</button>
+            </div>
+          </div>
+
+          <nav class="workflow-timeline" aria-label="Ledger lifecycle progression">
+            <div class="timeline-header">
+              <span class="timeline-title">Audit Lifecycle</span>
+            </div>
+            <div class="progress-rail" aria-label="Assessment workflow">
+              <span class="active"><span class="rail-num">1</span> Registered</span>
+              <span><span class="rail-num">2</span> Frozen</span>
+              <span><span class="rail-num">3</span> Assessed</span>
+              <span><span class="rail-num">4</span> Read back</span>
+            </div>
+          </nav>
+        </section>
+      </div>
+
+      <!-- Step 04: Readback & Evidence -->
+      <section class="card result-card" aria-labelledby="readback-title" aria-live="polite">
+        <div class="section-heading">
+          <div class="heading-group">
+            <p class="eyebrow">Step 04 / Readback</p>
+          <h2 id="readback-title">Verified Ledger State</h2>
+          </div>
+          <button id="refresh-button" class="button text-button" type="button">
+            <span>Refresh state</span>
+          </button>
+        </div>
+
+        <div id="empty-result" class="empty-state">
+          <div class="empty-icon" aria-hidden="true">∅</div>
+          <p class="empty-title">No Audit Record Loaded</p>
+          <p class="empty-desc">Register a software case or refresh to inspect its consensus-verified support status and evidence hash.</p>
+        </div>
+
         <div id="result-content" class="result-content hidden">
-          <div class="decision"><span class="eyebrow">CURRENT OUTCOME</span><strong id="outcome">—</strong><span id="case-state" class="state-chip">—</span></div>
-          <dl class="facts"><div><dt>Case</dt><dd id="read-case-id">—</dd></div><div><dt>Product / version</dt><dd id="read-product">—</dd></div><div><dt>Edition / region</dt><dd id="read-scope">—</dd></div><div><dt>Observed date</dt><dd id="read-date">—</dd></div><div><dt>Support window</dt><dd id="read-window">—</dd></div><div><dt>Retries</dt><dd id="read-retries">—</dd></div></dl>
-          <div class="evidence"><span class="eyebrow">EVIDENCE DIGEST</span><code id="evidence-digest">—</code><a id="policy-link" href="#" target="_blank" rel="noreferrer noopener">Open policy URL ↗</a></div>
+          <div class="decision">
+            <div class="decision-header">
+              <span class="eyebrow">Consensus Decision</span>
+              <span id="case-state" class="state-chip">—</span>
+            </div>
+            <strong id="outcome" class="outcome-label">—</strong>
+          </div>
+
+          <dl class="facts">
+            <div class="fact-item">
+              <dt>Case Identifier</dt>
+              <dd id="read-case-id" class="font-mono">—</dd>
+            </div>
+            <div class="fact-item">
+              <dt>Product / Version</dt>
+              <dd id="read-product">—</dd>
+            </div>
+            <div class="fact-item">
+              <dt>Edition / Region</dt>
+              <dd id="read-scope">—</dd>
+            </div>
+            <div class="fact-item">
+              <dt>Observed Date</dt>
+              <dd id="read-date" class="font-mono">—</dd>
+            </div>
+            <div class="fact-item">
+              <dt>Support Window</dt>
+              <dd id="read-window" class="font-mono">—</dd>
+            </div>
+            <div class="fact-item">
+              <dt>Assessment Retries</dt>
+              <dd id="read-retries" class="font-mono">—</dd>
+            </div>
+          </dl>
+
+          <div class="evidence">
+            <div class="evidence-header">
+              <span class="eyebrow">Evidence Digest</span>
+              <a id="policy-link" class="evidence-link" href="#" target="_blank" rel="noreferrer noopener">
+                <span>View Source Policy</span>
+              </a>
+            </div>
+            <code id="evidence-digest" class="digest-block">—</code>
+          </div>
         </div>
-        <div id="tx-evidence" class="tx-evidence hidden"><span class="eyebrow">LATEST TRANSACTION</span><code id="tx-hash">—</code><div class="tx-actions"><button id="copy-tx" class="text-button" type="button">Copy hash</button><a id="tx-link" href="#" target="_blank" rel="noreferrer noopener">Open in Explorer ↗</a></div></div>
+
+      <!-- prefers-reduced-motion: progress remains readable without animation. -->
+      <section id="tx-evidence" class="tx-evidence transaction-progress hidden" data-transaction-phase="IDLE" role="status" aria-live="polite" aria-atomic="true">
+          <div class="tx-header">
+            <div class="transaction-progress-heading">
+              <span id="transaction-spinner" class="transaction-progress-spinner hidden" aria-hidden="true"></span>
+              <div>
+                <span id="transaction-title" class="eyebrow">Transaction status</span>
+                <p id="transaction-detail" class="transaction-progress-detail">No transaction is in progress.</p>
+              </div>
+            </div>
+          </div>
+          <div id="transaction-hash-block" class="transaction-hash hidden">
+            <span class="field-hint">Transaction hash</span>
+            <code id="tx-hash" class="tx-hash-block">—</code>
+          </div>
+          <div class="tx-actions">
+            <button id="copy-tx" class="button secondary button-sm" type="button">
+              <span>Copy hash</span>
+            </button>
+            <a id="tx-link" class="button text-button" href="#" target="_blank" rel="noreferrer noopener">
+              <span>Open in Explorer</span>
+            </a>
+          </div>
+          <button id="transaction-reconcile" class="button secondary hidden" type="button">Continue verification</button>
+        </section>
       </section>
 
-      <section class="notice" id="notice" role="status"><span class="notice-mark">i</span><span id="notice-text">Enter a deployed contract address to begin.</span></section>
+      <!-- Live system notice -->
+      <section class="notice" id="notice" role="status">
+        <span class="notice-mark" aria-hidden="true">i</span>
+        <span id="notice-text">Enter a deployed contract address to begin.</span>
+      </section>
     </main>
 
-    <footer class="footer"><span>Decision state is read from GenLayer.</span><a href="../STAGE-2.md">Protocol notes</a></footer>
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-copy">
+          <span>Software Support Policy Applicability Ledger</span>
+          <span class="footer-sep" aria-hidden="true">·</span>
+          <span>Decision state verified by GenLayer</span>
+        </div>
+        <div class="footer-meta">
+          <span class="footer-badge">Consensus Verified</span>
+        </div>
+      </div>
+    </footer>
+
     <script type="module" src="./app.js"></script>
   </body>
 </html>

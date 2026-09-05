@@ -9,3 +9,9 @@ node_modules/
 dist/
 .vercel/
 
+# Local governance and planning notes are not part of the public release root.
+/AGENTS.md
+/CLAUDE.md
+/DESIGN.md
+/STAGE-1.md
+/STAGE-2.md
