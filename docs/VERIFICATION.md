@@ -24,7 +24,7 @@ node tests/frontend_progress.test.js
 git diff --check
 ```
 
-Current candidate result: contract lint/schema PASS; `21 passed`; frontend syntax/static checks PASS; executable provider/session integration regression PASS; integrated-browser disconnected load and zero-wallet chooser PASS; public instructions and required DOM hooks present; no visible wallet-routing/RPC/debug leakage. Frontend candidate commit: `45b0bc1cddda9fd67613782cb2eac3b2a2332c1e`. The existing Vercel production alias still serves the prior release; exact-candidate Vercel E2E and measured frontend RPC evidence remain pending.
+Current candidate result: contract lint/schema PASS; `21 passed`; frontend syntax/static checks PASS; executable provider/session integration regression PASS; integrated-browser disconnected load and zero-wallet chooser PASS; public instructions and required DOM hooks present; no visible wallet-routing/RPC/debug leakage. Frontend candidate commit: `0219155f7cc0230a5059f0eb97ebcdb136d971cc`. The existing Vercel production alias still serves the prior release; exact-candidate Vercel E2E and measured frontend RPC evidence remain pending.
 
 ## Deployed-source parity and live proof
 
