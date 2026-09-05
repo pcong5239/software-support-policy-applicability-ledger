@@ -75,7 +75,7 @@ def test_frontend_transaction_progress_is_explicit_and_reconciles_without_duplic
 
 
 def test_frontend_modules_parse_with_node():
-    for path in (ROOT / "frontend" / "app.js", ROOT / "frontend" / "config.js"):
+    for path in (ROOT / "frontend" / "app.js", ROOT / "frontend" / "config.js", ROOT / "frontend" / "wallet-session.js"):
         result = subprocess.run(
             ["node", "--check", str(path)],
             capture_output=True,
@@ -83,3 +83,14 @@ def test_frontend_modules_parse_with_node():
             check=False,
         )
         assert result.returncode == 0, result.stderr
+
+
+def test_wallet_session_regressions_execute():
+    result = subprocess.run(
+        ["node", str(ROOT / "tests" / "wallet_session.test.js")],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "wallet session regressions passed" in result.stdout
